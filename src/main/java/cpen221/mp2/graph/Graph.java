@@ -9,8 +9,10 @@ import java.util.*;
  */
 public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>, IGraph<V, E> {
 
+    HashSet<V> vertexSet = new HashSet<V>();
+    HashSet<E> edgeSet = new HashSet<E>();
 
-    public Graph {
+    public Graph (){
 
     }
 
@@ -23,7 +25,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return true if the vertex was added successfully and false otherwise
      */
     public boolean addVertex(V v) {
-
+        vertexSet.add(v);
     }
 
     /**
@@ -33,7 +35,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return true of v is part of the graph and false otherwise
      */
     public boolean vertex(V v) {
-
+        return vertexSet.contains(v);
     }
 
     /**
@@ -43,7 +45,17 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return true if the edge was successfully added and false otherwise
      */
     public boolean addEdge(E e) {
-
+        if (e ==){
+            return false;
+        }
+        if (edgeSet.contains(e)){
+            return false;
+        }
+        if (vertexSet.contains(e.v2()) && vertexSet.contains(e.v1())){
+            edgeSet.add(e);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -53,7 +65,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return true if e is an edge in the graoh and false otherwise
      */
     public boolean edge(E e) {
-
+        return edgeSet.contains(e);
     }
 
     /**
@@ -65,7 +77,12 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
 
     public boolean edge(V v1, V v2) {
-
+        for (E e : edgeSet){
+            if (e.v1().equals(v1) && e.v2().equals(v2)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -73,10 +90,17 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      *
      * @param v1 the first vertex of the edge
      * @param v2 the second vertex of the edge
-     * @return the length of the v1-v2 edge if this edge is part of the graph
+     * @return the length of the v1-v2 edge, if this edge is part of the graph, and 0 otherwise
      */
     public int edgeLength(V v1, V v2) {
-
+        if (edge(v1, v2)){
+            for (E e : edgeSet){
+                if (e.v1().equals(v1) && e.v2().equals(v2)){
+                    return e.length();
+                }
+            }
+        }
+        return 0;
     }
 
     /**
@@ -85,7 +109,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return the sum of the lengths of all edges in the graph
      */
     public int edgeLengthSum() {
-
+        int sum = 0;
+        for (E e: edgeSet){
+            sum += e.length();
+        }
+        return sum;
     }
 
     /**
@@ -95,7 +123,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return true if e was successfully removed and false otherwise
      */
     public boolean remove(E e) {
-
+        if (edge(e)){
+            edgeSet.remove(e);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -105,7 +137,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return true if v was successfully removed and false otherwise
      */
     public boolean remove(V v) {
-
+        if (vertex(v)){
+            vertexSet.remove(v);
+            return true;
+        }
+        return false;
     }
 
 
@@ -116,18 +152,25 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return a set of all vertices in the graph
      */
     public Set<V> allVertices() {
-
+        return new HashSet<>(vertexSet);
+        //TODO: check this is valid
     }
 
     /**
-     * Obtain a set of all vertices incident on v.
+     * Obtain a set of all edges incident on v.
      * Access to this set **should not** permit graph mutations.
      *
      * @param v the vertex of interest
      * @return all edges incident on v
      */
     public Set<E> allEdges(V v) {
-
+        Set<E> thisESet = new HashSet<E>();
+        for (E e : edgeSet){
+            if (e.incident(v)){
+                thisESet.add(e);
+            }
+        }
+        return thisESet;
     }
 
     /**
@@ -137,7 +180,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return all edges in the graph
      */
     public Set<E> allEdges() {
-
+        return new HashSet<E>(edgeSet);
     }
 
     /**
@@ -148,7 +191,16 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return a map containing each vertex w that neighbors v and the edge between v and w.
      */
     public Map<V, E> getNeighbours(V v) {
-
+        Map<V, E> neighbourMap = new HashMap<V, E>();
+        for (E e : edgeSet){
+            if (e.v1().equals(v)) {
+                neighbourMap.put(e.v2(), e);
+            }
+            else if (e.v2().equals(v)) {
+                neighbourMap.put(e.v1(), e);
+            }
+        }
+        return neighbourMap;
     }
 
 
