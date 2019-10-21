@@ -9,6 +9,12 @@ import java.util.*;
  */
 public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>, IGraph<V, E> {
 
+
+    public Graph {
+
+    }
+
+
     //methods from IGraph
     /**
      * Add a vertex to the graph
@@ -141,9 +147,14 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @param v is the vertex whose neighbourhood we want.
      * @return a map containing each vertex w that neighbors v and the edge between v and w.
      */
-    Map<V, E> getNeighbours(V v) {
+    public Map<V, E> getNeighbours(V v) {
 
     }
+
+
+
+
+
 
 
     //ImGraph
@@ -154,7 +165,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @param sink   the end vertex
      * @return the vertices, in order, on the shortest path from source to sink (both end points are part of the list)
      */
-    List<V> shortestPath(V source, V sink) {
+    public List<V> shortestPath(V source, V sink) {
 
     }
 
@@ -164,7 +175,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      *
      * @return a list of edges that forms a minimum spanning tree of the graph
      */
-    List<E> minimumSpanningTree() {
+    public List<E> minimumSpanningTree() {
 
     }
 
@@ -174,7 +185,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @param path indicates the vertices on the given path
      * @return the length of path
      */
-    int pathLength(List<V> path) {
+    public int pathLength(List<V> path) {
 
     }
 
@@ -185,7 +196,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @param range the radius of the search.
      * @return a set of vertices that are within range of v (this set does not contain v).
      */
-    Set<V> search(V v, int range) {
+    public Set<V> search(V v, int range) {
 
     }
 
@@ -199,7 +210,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      *
      * @return the diameter of the graph.
      */
-    int diameter() {
+    public int diameter() {
 
     }
 
