@@ -26,6 +26,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     public boolean addVertex(V v) {
         vertexSet.add(v);
+        return vertexSet.contains(v);
     }
 
     /**
@@ -219,48 +220,57 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     public List<V> shortestPath(V source, V sink) {
 
-//        List<V> shortestPathVertices = new ArrayList<>();
-//        Set<V> visitedNodes = new HashSet<>();
-//        List<V> visitingNodesOrder = new ArrayList<>();
-//        Map<V, Integer> nodeWeights = new HashMap<V, Integer>();
-//
-//        //initialize nodeWeights to contain every vertex with every entry set to infinity and source vertex set to 0
-//        for (V v: vertexSet) {
-//            if (v.equals(source)) {
-//                nodeWeights.put(source, 0);
-//            } else {
-//                nodeWeights.put(v, Integer.MAX_VALUE);
-//            }
-//        }
-//
-//        visitingNodesOrder.add(source);
-//
-//        //comparing node weights to corresponding edge weights and assigning nodeWeights the smaller value
-//        for (V atNode: visitingNodesOrder) {
-//            for (V neighbour: getNeighbours(atNode).keySet()) {
-//                visitedNodes.add(neighbour);
-//                nodeWeights.replace(neighbour, Math.min(nodeWeights.get(neighbour), edgeLength(atNode, neighbour) + nodeWeights.get(atNode)));
-//
-//                for (V nextNeighbour: getNeighbours(neighbour).keySet()) {
-//                    if (!visitingNodesOrder.contains(nextNeighbour)) {
-//                        visitingNodesOrder.add(nextNeighbour);
-//                    }
-//                }
-//            }
-//        }
-//
-//        //scroll through and find smallest sum of nodeWeights
-//        V thisSmallestNeighbourNode;
-//        int thisSmallestWeight = 0;
-//        for (V neighbour: getNeighbours(source).keySet()) { //change source
-//            if (nodeWeights.get(neighbour) ) {
-//
-//            }
-//        }
-//
-//
-//        return shortestPathVertices;
-    }
+        List<V> shortestPathVertices = new ArrayList<>();
+        Set<V> visitedNodes = new HashSet<>();
+        Set<V> unvisitedNodes = new HashSet<>();
+        Map<V, Integer> nodeWeights = new HashMap<V, Integer>();
+        Map<V,V> previousNode = new HashMap<>();
+
+        //initialize nodeWeights to contain every vertex with every entry set to infinity and source vertex set to 0
+        for (V v: vertexSet) {
+            unvisitedNodes.add(v);
+            if (v.equals(source)) {
+                nodeWeights.put(source, 0);
+            } else {
+                nodeWeights.put(v, Integer.MAX_VALUE);
+            }
+        }
+
+        //
+        V currentNode = source;
+        while(!unvisitedNodes.isEmpty()) {
+            //get the node in unvistedNodes that has the lowest weight and assign as current node
+            int i = Integer.MAX_VALUE;
+            for (V v : unvisitedNodes) {
+                if (nodeWeights.get(v) < i) {
+                    currentNode = v;
+                    i = nodeWeights.get(v);
+                }
+            }
+
+
+            for (V neighbourNode = getNeighbours(currentNode)) {
+                if (!visitedNodes.contains(neighbourNode)) {
+                    if (nodeWeights.get(currentNode) + edgeLength(currentNode, neighbourNode) < nodeWeights.get(neighbourNode)) {
+                        nodeWeights.put(neighbourNode, nodeWeights.get(currentNode) + edgeLength(currentNode, neighbourNode));
+                        previousNode.put(neighbourNode, currentNode);
+                    }
+                }
+            }
+            visitedNodes.add(currentNode);
+            unvisitedNodes.remove(currentNode);
+        }
+
+        List<V> shortestPath = new ArrayList<V>();
+        V thisNode = sink;
+        while (!thisNode.equals(source)){
+            shortestPath.add(0,thisNode);
+            thisNode = previousNode.get(thisNode);
+        }
+        shortestPath.add(0, source);
+
+        return shortestPathVertices;
+ }
 
     /**
      * Compute the minimum spanning tree of the graph.
@@ -272,7 +282,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         List<E> mstEdges = new ArrayList<>();
 
 
-        return mstEdges;
+        return null;
     }
 
     /**
@@ -317,6 +327,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     public int diameter() {
 
+        return 0;
     }
 
     /**
@@ -328,7 +339,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return the edge connecting v1 and v2
      */
     public E getEdge(V v1, V v2){
-
+        return null;
     }
 
 
