@@ -298,7 +298,10 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return a set of vertices that are within range of v (this set does not contain v).
      */
     public Set<V> search(V v, int range) {
+        Set<V> rangeVertices = new HashSet<V>();
 
+
+        return rangeVertices;
     }
 
     /**
