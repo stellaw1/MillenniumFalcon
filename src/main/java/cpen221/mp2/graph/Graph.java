@@ -45,7 +45,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return true if the edge was successfully added and false otherwise
      */
     public boolean addEdge(E e) {
-        if (e ==){
+        if (e == null){
             return false;
         }
         if (edgeSet.contains(e)){
@@ -211,7 +211,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     //ImGraph
     /**
-     * Compute the shortest path from source to sink
+     * Compute the shortest path from source to sink, using Dijkstra's algorithm
      *
      * @param source the start vertex
      * @param sink   the end vertex
@@ -219,7 +219,47 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     public List<V> shortestPath(V source, V sink) {
 
-
+//        List<V> shortestPathVertices = new ArrayList<>();
+//        Set<V> visitedNodes = new HashSet<>();
+//        List<V> visitingNodesOrder = new ArrayList<>();
+//        Map<V, Integer> nodeWeights = new HashMap<V, Integer>();
+//
+//        //initialize nodeWeights to contain every vertex with every entry set to infinity and source vertex set to 0
+//        for (V v: vertexSet) {
+//            if (v.equals(source)) {
+//                nodeWeights.put(source, 0);
+//            } else {
+//                nodeWeights.put(v, Integer.MAX_VALUE);
+//            }
+//        }
+//
+//        visitingNodesOrder.add(source);
+//
+//        //comparing node weights to corresponding edge weights and assigning nodeWeights the smaller value
+//        for (V atNode: visitingNodesOrder) {
+//            for (V neighbour: getNeighbours(atNode).keySet()) {
+//                visitedNodes.add(neighbour);
+//                nodeWeights.replace(neighbour, Math.min(nodeWeights.get(neighbour), edgeLength(atNode, neighbour) + nodeWeights.get(atNode)));
+//
+//                for (V nextNeighbour: getNeighbours(neighbour).keySet()) {
+//                    if (!visitingNodesOrder.contains(nextNeighbour)) {
+//                        visitingNodesOrder.add(nextNeighbour);
+//                    }
+//                }
+//            }
+//        }
+//
+//        //scroll through and find smallest sum of nodeWeights
+//        V thisSmallestNeighbourNode;
+//        int thisSmallestWeight = 0;
+//        for (V neighbour: getNeighbours(source).keySet()) { //change source
+//            if (nodeWeights.get(neighbour) ) {
+//
+//            }
+//        }
+//
+//
+//        return shortestPathVertices;
     }
 
     /**
@@ -229,7 +269,10 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return a list of edges that forms a minimum spanning tree of the graph
      */
     public List<E> minimumSpanningTree() {
+        List<E> mstEdges = new ArrayList<>();
 
+
+        return mstEdges;
     }
 
     /**
@@ -239,7 +282,13 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return the length of path
      */
     public int pathLength(List<V> path) {
+        int pathLength = 0;
 
+        for (int i = 0; i < path.size() - 1; i++) {
+            pathLength += getEdge(path.get(i), path.get(i + 1)).length();
+        }
+
+        return pathLength;
     }
 
     /**
