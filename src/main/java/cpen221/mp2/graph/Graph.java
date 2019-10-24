@@ -282,10 +282,37 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     public List<E> minimumSpanningTree() {
         List<E> mstEdges = new ArrayList<>();
+        Set<V> unvisitedNodes = new HashSet<>();
+        List<E> allEdges = new ArrayList<>();
+        E shortestEdge = null;
 
+        for (V v: vertexSet) {
+            unvisitedNodes.add(v);
+        }
 
-        return null;
+        for (E e: edgeSet) {
+            allEdges.add(e);
+        }
+
+        while (!unvisitedNodes.isEmpty()) {
+            shortestEdge = allEdges.get(0);
+            for (E e: allEdges) {
+                if (e.length() < shortestEdge.length()) {
+                    shortestEdge = e;
+                }
+            }
+
+            if (unvisitedNodes.contains(shortestEdge.v1()) || unvisitedNodes.contains(shortestEdge.v2())) {
+                mstEdges.add(shortestEdge);
+                unvisitedNodes.remove(shortestEdge.v1());
+                unvisitedNodes.remove(shortestEdge.v2());
+                allEdges.remove(shortestEdge);
+            }
+        }
+
+        return mstEdges;
     }
+
 
     /**
      * Compute the length of a given path
