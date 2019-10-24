@@ -235,7 +235,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             }
         }
 
-        //
         V currentNode = source;
         while(!unvisitedNodes.isEmpty()) {
             //get the node in unvistedNodes that has the lowest weight and assign as current node
@@ -247,7 +246,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 }
             }
 
-
+            //check for shorter path at each neighbour of currentNode not already in visitedNodes
             for (V neighbourNode : getNeighbours(currentNode).keySet()) {
                 if (!visitedNodes.contains(neighbourNode)) {
                     if (nodeWeights.get(currentNode) + edgeLength(currentNode, neighbourNode) < nodeWeights.get(neighbourNode)) {

@@ -58,7 +58,7 @@ public class GraphTest {
         List<Vertex> expectedPath = new ArrayList<>();
         expectedPath.add(v1);
         expectedPath.add(v3);
-        assertEquals(expectedPath.get(0), g.shortestPath(v1, v3).get(0));
+        assertEquals(expectedPath, g.shortestPath(v1, v3));
     }
 
 
@@ -69,8 +69,8 @@ public class GraphTest {
         Vertex v3 = new Vertex(3, "C");
 
         Edge<Vertex> e1 = new Edge<>(v1, v2, 1);
-        Edge<Vertex> e2 = new Edge<>(v2, v3, 3);
-        Edge<Vertex> e3 = new Edge<>(v1, v3, 2);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 1);
+        Edge<Vertex> e3 = new Edge<>(v1, v3, 3);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -80,8 +80,11 @@ public class GraphTest {
         g.addEdge(e2);
         g.addEdge(e3);
 
-        assertEquals(e2, g.getEdge(v2, v3));
-        assertEquals(2, g.shortestPath(v1, v3));
+        List<Vertex> expectedPath = new ArrayList<>();
+        expectedPath.add(v1);
+        expectedPath.add(v2);
+        expectedPath.add(v3);
+        assertEquals(expectedPath, g.shortestPath(v1, v3));
     }
 
 }
