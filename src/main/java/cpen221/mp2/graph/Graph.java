@@ -2,6 +2,7 @@ package cpen221.mp2.graph;
 
 import java.util.*;
 
+
 /**
  * Represents a graph with vertices of type V.
  *
@@ -282,34 +283,56 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     public List<E> minimumSpanningTree() {
         List<E> mstEdges = new ArrayList<>();
-        Set<V> unvisitedNodes = new HashSet<>();
+        List<Set<V>> unvisitedNodes = new ArrayList<Set<V>>();
         List<E> allEdges = new ArrayList<>();
         E shortestEdge = null;
 
         for (V v: vertexSet) {
-            unvisitedNodes.add(v);
+            Set<V> thisNodeSet = new HashSet<V>();
+            thisNodeSet.add(v);
+            unvisitedNodes.add(thisNodeSet);
         }
 
         for (E e: edgeSet) {
             allEdges.add(e);
         }
 
-        while (!unvisitedNodes.isEmpty()) {
-            shortestEdge = allEdges.get(0);
-            for (E e: allEdges) {
-                if (e.length() < shortestEdge.length()) {
-                    shortestEdge = e;
+        //sort allEdges by length from shortest to longest
+        Collections.sort(allEdges, new Comparator<E>(){
+            @Override
+            public int compare (E e1, E e2){
+                return e1.length()-e2.length();
+            }
+        });
+
+        for (E e : allEdges) {
+            Set<V> v1Set = new HashSet<V>();
+            Set<V> v2Set = new HashSet<V>();
+            for (int i = 0; i < unvisitedNodes.size(); i++) {
+                if (unvisitedNodes.get(i).contains(e.v1()))
+                    v1Set = unvisitedNodes.get(i);
+            }
+
+            for (int j = 0; j < unvisitedNodes.size(); j++) {
+                if (unvisitedNodes.get(j).contains(e.v2())) {
+                    v2Set = unvisitedNodes.get(j);
                 }
             }
 
-            if (unvisitedNodes.contains(shortestEdge.v1()) || unvisitedNodes.contains(shortestEdge.v2())) {
-                mstEdges.add(shortestEdge);
-                unvisitedNodes.remove(shortestEdge.v1());
-                unvisitedNodes.remove(shortestEdge.v2());
-                allEdges.remove(shortestEdge);
+            if (!v1Set.equals(v2Set)) {
+                for (int i = 0; i < unvisitedNodes.size(); i ++) {
+                    if (unvisitedNodes.get(i).equals(v1Set)){
+                        for (int j = 0; j < unvisitedNodes.size(); j ++){
+                            if (unvisitedNodes.get(j).equals(v2Set)){
+                                unvisitedNodes.get(i).addAll(unvisitedNodes.get(j));
+                                unvisitedNodes.remove(unvisitedNodes.get(j));
+                                mstEdges.add(e);
+                            }
+                        }
+                    }
+                }
             }
         }
-
         return mstEdges;
     }
 
