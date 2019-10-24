@@ -220,7 +220,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     public List<V> shortestPath(V source, V sink) {
 
-        List<V> shortestPathVertices = new ArrayList<>();
         Set<V> visitedNodes = new HashSet<>();
         Set<V> unvisitedNodes = new HashSet<>();
         Map<V, Integer> nodeWeights = new HashMap<V, Integer>();
@@ -249,11 +248,15 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             }
 
 
-            for (V neighbourNode = getNeighbours(currentNode)) {
+            for (V neighbourNode : getNeighbours(currentNode).keySet()) {
                 if (!visitedNodes.contains(neighbourNode)) {
                     if (nodeWeights.get(currentNode) + edgeLength(currentNode, neighbourNode) < nodeWeights.get(neighbourNode)) {
-                        nodeWeights.put(neighbourNode, nodeWeights.get(currentNode) + edgeLength(currentNode, neighbourNode));
-                        previousNode.put(neighbourNode, currentNode);
+                        nodeWeights.replace(neighbourNode, nodeWeights.get(currentNode) + edgeLength(currentNode, neighbourNode));
+                        if (previousNode.containsKey(neighbourNode)) {
+                            previousNode.replace(neighbourNode, currentNode);
+                        } else {
+                            previousNode.put(neighbourNode, currentNode);
+                        }
                     }
                 }
             }
@@ -269,7 +272,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         }
         shortestPath.add(0, source);
 
-        return shortestPathVertices;
+        return shortestPath;
  }
 
     /**
