@@ -3,9 +3,10 @@ package cpen221.mp2;
 import cpen221.mp2.graph.Edge;
 import cpen221.mp2.graph.Graph;
 import cpen221.mp2.graph.Vertex;
+import org.junit.Assert;
 import org.junit.Test;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -191,6 +192,54 @@ public class GraphTest {
         expectedMST.add(e4);
         expectedMST.add(e5);
 
+        Collections.sort(expectedMST, new Comparator<Edge>(){
+           @Override
+           public int compare(Edge e1, Edge e2){
+               return e1.length()-e2.length();
+           }
+        });
         assertEquals(expectedMST, g.minimumSpanningTree());
     }
+
+    @Test public void testSearch(){
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+        Vertex v5 = new Vertex(5, "E");
+        Vertex v6 = new Vertex(6, "F");
+        Vertex v7 = new Vertex(7, "G");
+
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 1);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 1);
+        Edge<Vertex> e3 = new Edge<>(v2, v4, 2);
+        Edge<Vertex> e4 = new Edge<>(v2, v5, 7);
+        Edge<Vertex> e5 = new Edge<>(v1, v6, 7);
+        Edge<Vertex> e6 = new Edge<>(v1, v7, 10);
+
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addVertex(v5);
+        g.addVertex(v6);
+        g.addVertex(v7);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+        g.addEdge(e5);
+        g.addEdge(e6);
+
+        Set<Vertex> expectedNodes = new HashSet<Vertex>();
+        expectedNodes.add(v2);
+        expectedNodes.add(v3);
+        expectedNodes.add(v4);
+
+        Assert.assertTrue(expectedNodes.equals(g.search(v1, 3)));
+    }
+
 }

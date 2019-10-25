@@ -305,6 +305,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             }
         });
 
+        //add shortest edge to unvisitedNodes set only if the edge does not form a loop - ie its two nodes are in different sets
+        //after adding the edge, merge the two sets that contain its two nodes
         for (E e : allEdges) {
             Set<V> v1Set = new HashSet<V>();
             Set<V> v2Set = new HashSet<V>();
@@ -363,7 +365,19 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public Set<V> search(V v, int range) {
         Set<V> rangeVertices = new HashSet<V>();
 
+        public Set<V> searchNeighbour(V, V, int);
+        for (V neighbourNode : getNeighbours(v).keySet()) {
+            int thisEdgeLength = edgeLength(v, neighbourNode);
+            if (range >= thisEdgeLength) {
+                rangeVertices.add(neighbourNode);
+                System.out.println(neighbourNode.name());
+                rangeVertices.addAll(search(neighbourNode, range - thisEdgeLength));
+            }
+        }
 
+        if (rangeVertices.contains(v)){
+            rangeVertices.remove(v);
+        }
         return rangeVertices;
     }
 
@@ -391,6 +405,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return the edge connecting v1 and v2
      */
     public E getEdge(V v1, V v2){
+
         return null;
     }
 
