@@ -95,9 +95,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return the length of the v1-v2 edge, if this edge is part of the graph, and 0 otherwise
      */
     public int edgeLength(V v1, V v2) {
-        if (edge(v1, v2)){
+        if (edge(v1, v2) || edge(v2, v1)){
             for (E e : edgeSet){
-                if (e.v1().equals(v1) && e.v2().equals(v2)){
+                if (e.v1().equals(v1) && e.v2().equals(v2) || e.v1().equals(v2) && e.v2().equals(v1)){
                     return e.length();
                 }
             }
@@ -155,7 +155,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     public Set<V> allVertices() {
         return new HashSet<>(vertexSet);
-        //TODO: check this is valid
     }
 
     /**
@@ -349,7 +348,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         int pathLength = 0;
 
         for (int i = 0; i < path.size() - 1; i++) {
-            pathLength += getEdge(path.get(i), path.get(i + 1)).length();
+            pathLength += edgeLength(path.get(i), path.get(i + 1));
         }
 
         return pathLength;
@@ -365,12 +364,12 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public Set<V> search(V v, int range) {
         Set<V> rangeVertices = new HashSet<V>();
 
-        public Set<V> searchNeighbour(V, V, int);
+        //public Set<V> searchNeighbour(V, V, int);
         for (V neighbourNode : getNeighbours(v).keySet()) {
             int thisEdgeLength = edgeLength(v, neighbourNode);
             if (range >= thisEdgeLength) {
                 rangeVertices.add(neighbourNode);
-                System.out.println(neighbourNode.name());
+                //System.out.println(neighbourNode.name());
                 rangeVertices.addAll(search(neighbourNode, range - thisEdgeLength));
             }
         }
@@ -392,8 +391,39 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return the diameter of the graph.
      */
     public int diameter() {
+        Set<Integer> shortestPaths = new HashSet<>();
+        int diam = 0;
+        List<V> vertices = new ArrayList<>();
 
-        return 0;
+        //add all vertices to a list
+        for (V v: vertexSet) {
+            vertices.add(v);
+        }
+
+        //calculate shortest path length for each vertices pair
+        for (V source: vertices) {
+            for (int i = 0; i < vertices.size(); i++) {
+                V sink = vertices.get(i);
+                int length = 0;
+                if (!sink.equals(source)) {
+                    List<V> shortestPath = shortestPath(source, sink);
+                    for (int j = 0; j < shortestPath.size() - 1; j++) {
+                        length += edgeLength(shortestPath.get(j), shortestPath.get(j + 1));
+                    }
+                    shortestPaths.add(length);
+                }
+
+            }
+        }
+
+        //find longest value in shortestPaths
+        for (int length: shortestPaths) {
+            if (length > diam) {
+                diam = length;
+            }
+        }
+
+        return diam;
     }
 
     /**
@@ -402,10 +432,18 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      *
      * @param v1 one end of the edge
      * @param v2 the other end of the edge
-     * @return the edge connecting v1 and v2
+     * @return the edge connecting v1 and v2, and returns null if edge does not exist in graph
      */
     public E getEdge(V v1, V v2){
-
+        if (!edge(v1, v2)) {
+            return null;
+        } else {
+            for (E edge: edgeSet) {
+                if (edge.v1().equals(v1) && edge.v2().equals(v2) || edge.v1().equals(v2) && edge.v2().equals(v1)) {
+                    return edge;
+                }
+            }
+        }
         return null;
     }
 

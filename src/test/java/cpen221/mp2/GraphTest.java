@@ -9,9 +9,15 @@ import org.junit.Test;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GraphTest {
 
+    //test Edge.java constructor and exceptions
+
+    //test Vertex.java constructor
+
+    //test Graph.java constructor
     @Test
     public void testCreateGraph() {
         Vertex v1 = new Vertex(1, "A");
@@ -32,10 +38,54 @@ public class GraphTest {
         g.addEdge(e2);
         g.addEdge(e3);
 
+        List<Vertex> expectedPath = new ArrayList<>();
+        expectedPath.add(v3);
+        expectedPath.add(v2);
+        expectedPath.add(v1);
+        expectedPath.add(v4);
+
         assertEquals(e2, g.getEdge(v2, v3));
-        assertEquals(21, g.shortestPath(v2, v2));
+        assertEquals(expectedPath, g.shortestPath(v3, v4));
+        assertEquals(21, g.pathLength(g.shortestPath(v3, v4)));
     }
 
+    //test Graph.allEdges and Graph.allVertices and Graph.remove
+    @Test
+    public void testAllEdges() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 1);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 3);
+        Edge<Vertex> e3 = new Edge<>(v1, v3, 2);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+
+        Set<Edge> expectedEdgeSet = new HashSet<>();
+        expectedEdgeSet.add(e1);
+        expectedEdgeSet.add(e2);
+        expectedEdgeSet.add(e3);
+        assertEquals(expectedEdgeSet, g.allEdges());
+
+        expectedEdgeSet.remove(e2);
+        assertEquals(expectedEdgeSet, g.allEdges(v1));
+
+        Set<Vertex> expectedVertexSet = new HashSet<>();
+        expectedVertexSet.add(v2);
+        expectedVertexSet.add(v3);
+        g.remove(v1);
+        assertEquals(expectedVertexSet, g.allVertices());
+
+    }
+
+    //testing Graph.shortestPath using Lists
     @Test
     public void testShortestDistance() {
         Vertex v1 = new Vertex(1, "A");
@@ -54,15 +104,15 @@ public class GraphTest {
         g.addEdge(e2);
         g.addEdge(e3);
 
-        //assertEquals(e2, g.getEdge(v2, v3));
-
         List<Vertex> expectedPath = new ArrayList<>();
         expectedPath.add(v1);
         expectedPath.add(v3);
         assertEquals(expectedPath, g.shortestPath(v1, v3));
+
+        assertEquals(6, g.edgeLengthSum());
     }
 
-
+    //testing Graph.shortestPath using Lists and some simple IGraph methods
     @Test
     public void testShortestDistance2() {
         Vertex v1 = new Vertex(1, "A");
@@ -85,10 +135,17 @@ public class GraphTest {
         expectedPath.add(v1);
         expectedPath.add(v2);
         expectedPath.add(v3);
+
+        assertTrue(g.edge(e1));
+        assertTrue(g.vertex(v1));
+
+        v1.updateName("test");
+        assertEquals("test", v1.name());
+
         assertEquals(expectedPath, g.shortestPath(v1, v3));
     }
 
-
+    //simple Graph.minimumSpanningTree test
     @Test
     public void testMST1() {
         Vertex v1 = new Vertex(1, "A");
@@ -121,7 +178,7 @@ public class GraphTest {
         assertEquals(expectedMST, g.minimumSpanningTree());
     }
 
-
+    //simple Graph.minimumSpanningTree test
     @Test
     public void testMST2() {
         Vertex v1 = new Vertex(1, "A");
@@ -147,7 +204,7 @@ public class GraphTest {
         assertEquals(expectedMST, g.minimumSpanningTree());
     }
 
-
+    //uses for loop to test equality of MST lists to allow equality with different orders in lists
     @Test
     public void testMST3() {
         Vertex v1 = new Vertex(1, "A");
@@ -192,16 +249,25 @@ public class GraphTest {
         expectedMST.add(e4);
         expectedMST.add(e5);
 
-        Collections.sort(expectedMST, new Comparator<Edge>(){
-           @Override
-           public int compare(Edge e1, Edge e2){
-               return e1.length()-e2.length();
-           }
-        });
-        assertEquals(expectedMST, g.minimumSpanningTree());
+//        Collections.sort(expectedMST, new Comparator<Edge>(){
+//           @Override
+//           public int compare(Edge e1, Edge e2){
+//               return e1.length() - e2.length();
+//           }
+//        });
+
+        List<Edge<Vertex>> actualMST = g.minimumSpanningTree();
+
+        for (int i = 0; i < actualMST.size(); i++) {
+            assertTrue(expectedMST.contains(actualMST.get(i)));
+        }
+
+        //assertEquals(expectedMST, actualMST);
     }
 
-    @Test public void testSearch(){
+    //testing Graph.search
+    @Test
+    public void testSearch(){
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
@@ -240,6 +306,38 @@ public class GraphTest {
         expectedNodes.add(v4);
 
         Assert.assertTrue(expectedNodes.equals(g.search(v1, 3)));
+    }
+
+    //test diameter method in Graph.java
+    @Test
+    public void testDiameter() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 1);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 2);
+        Edge<Vertex> e3 = new Edge<>(v1, v3, 4);
+        Edge<Vertex> e4 = new Edge<>(v2, v4, 5);
+        Edge<Vertex> e5 = new Edge<>(v3, v4, 6);
+
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+        g.addEdge(e5);
+
+        List<Vertex> shortestPath = g.shortestPath(v1, v3);
+
+        assertEquals(3, g.pathLength(shortestPath));
+        assertEquals(6, g.diameter());
     }
 
 }
