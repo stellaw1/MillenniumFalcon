@@ -364,7 +364,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public Set<V> search(V v, int range) {
         Set<V> rangeVertices = new HashSet<V>();
 
-        //public Set<V> searchNeighbour(V, V, int);
+
         for (V neighbourNode : getNeighbours(v).keySet()) {
             int thisEdgeLength = edgeLength(v, neighbourNode);
             if (range >= thisEdgeLength) {
