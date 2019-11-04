@@ -13,11 +13,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     HashSet<V> vertexSet = new HashSet<V>();
     HashSet<E> edgeSet = new HashSet<E>();
 
-    public Graph (){
-
-    }
-
-
     //methods from IGraph
     /**
      * Add a vertex to the graph
