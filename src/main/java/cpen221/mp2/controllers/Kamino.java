@@ -139,7 +139,7 @@ public class Kamino implements Controller {
     }
 
     /**
-     * Initialize the game with seed s and spaceship sp. If this game has already
+     * Intialize the game with seed s and spaceship sp. If this game has already
      * been initialized, this overwrites the previous initialization.
      */
     protected void init(long seed, Spaceship ship) {

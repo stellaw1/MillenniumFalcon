@@ -17,8 +17,10 @@ import java.util.*;
 public class MillenniumFalcon implements Spaceship {
     long startTime = System.nanoTime(); // start time of rescue phase
 
+
     @Override
     public void hunt(HunterStage state) {
+
         HashMap<Integer, Integer> stagesMap = new HashMap<>();
         HashSet<Integer> visitedPlanetIDs = new HashSet<>();
 
@@ -29,31 +31,53 @@ public class MillenniumFalcon implements Spaceship {
             ArrayList<PlanetStatus> allNeighbors = new ArrayList<>();
             HashSet<Integer> allNeighborsIDSet = new HashSet<>();
 
+            System.out.println("at planet " + state.currentID());
+            System.out.println("planet " + state.currentID() + " has signal " + state.signal());
             for (PlanetStatus thisNeighbor : state.neighbors()){
+                System.out.println("check neighbor " + thisNeighbor.name() + " has signal " + thisNeighbor.signal());
                 allNeighbors.add(thisNeighbor);
                 allNeighborsIDSet.add(thisNeighbor.id());
             }
-            Collections.sort(allNeighbors);
 
+            //sort allNeighbors from highest signal to lowest signal
+            Collections.sort(allNeighbors, new Comparator<PlanetStatus>(){
+                @Override
+                public int compare(PlanetStatus thisOne, PlanetStatus otherOne) {
+                    if (thisOne.signal() > otherOne.signal()) {
+                        return -1;
+                    } else if (thisOne.signal() < otherOne.signal()) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            });
+            for (int i = 0; i < allNeighbors.size(); i ++){
+                System.out.println("neighbor " + allNeighbors.get(i).name() + "  has signal " + allNeighbors.get(i).signal());
+            }
 
-            for (int i = allNeighbors.size()-1; i > 0; i--){
+            for (int i = 0; i < allNeighbors.size(); i++){
                 int thisID = allNeighbors.get(i).id();
                 if (!visitedPlanetIDs.contains(thisID)){
                     stagesMap.put(thisID, state.currentID());
                     visitedPlanetIDs.add(thisID);
                     state.moveTo(thisID);
+                    System.out.println("moved to " + allNeighbors.get(i).name() + " ID " + state.currentID());
                     break;
+                } else if (i == allNeighbors.size() -1){
+                    int prevStateID = stagesMap.get(state.currentID());
+                    state.moveTo(prevStateID);
+                    System.out.println("moved to " + state.currentID());
                 }
             }
-
-
         }
+        System.out.println("checkpoint");
         return;
     }
 
 
     @Override
     public void gather(GathererStage state) {
+
         // TODO: Implement this method
     }
 

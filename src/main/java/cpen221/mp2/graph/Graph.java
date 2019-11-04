@@ -80,7 +80,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     public boolean edge(V v1, V v2) {
         for (E e : edgeSet){
-            if (e.v1().equals(v1) && e.v2().equals(v2)){
+            if (e.v1().equals(v1) && e.v2().equals(v2) || e.v1().equals(v2) && e.v2().equals(v1)){
                 return true;
             }
         }
@@ -363,19 +363,27 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     public Set<V> search(V v, int range) {
         Set<V> rangeVertices = new HashSet<V>();
-
-
-        for (V neighbourNode : getNeighbours(v).keySet()) {
-            int thisEdgeLength = edgeLength(v, neighbourNode);
-            if (range >= thisEdgeLength) {
-                rangeVertices.add(neighbourNode);
-                //System.out.println(neighbourNode.name());
-                rangeVertices.addAll(search(neighbourNode, range - thisEdgeLength));
-            }
+        for (V neighborNode : getNeighbours(v).keySet()) {
+            rangeVertices.addAll(searchWithMemory(neighborNode, range, rangeVertices));
         }
-
         if (rangeVertices.contains(v)){
             rangeVertices.remove(v);
+        }
+
+        return rangeVertices;
+
+    }
+    private Set<V> searchWithMemory(V v, int range, Set<V> visitedNodes){
+        Set<V> rangeVertices = new HashSet<V>();
+        for (V neighbourNode : getNeighbours(v).keySet()) {
+            if (!visitedNodes.contains(neighbourNode)) {
+                int thisEdgeLength = edgeLength(v, neighbourNode);
+                if (range >= thisEdgeLength) {
+                    visitedNodes.add(neighbourNode);
+                    rangeVertices.add(neighbourNode);
+                    rangeVertices.addAll(searchWithMemory(neighbourNode, range - thisEdgeLength, visitedNodes));
+                }
+            }
         }
         return rangeVertices;
     }
