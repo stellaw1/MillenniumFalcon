@@ -72,7 +72,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @param v2 the second vertex of the edge
      * @return true of the v1-v2 edge is part of the graph and false otherwise
      */
-
     public boolean edge(V v1, V v2) {
         for (E e : edgeSet){
             if (e.v1().equals(v1) && e.v2().equals(v2) || e.v1().equals(v2) && e.v2().equals(v1)){
@@ -201,10 +200,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
 
 
-
-
-
-
     //ImGraph
     /**
      * Compute the shortest path from source to sink, using Dijkstra's algorithm
@@ -220,7 +215,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         Map<V, Integer> nodeWeights = new HashMap<V, Integer>();
         Map<V,V> previousNode = new HashMap<>();
 
-        //initialize nodeWeights to contain every vertex with every entry set to infinity and source vertex set to 0
+        //Create shortest path using Djikstra's Algorithm
+        //Initialize nodeWeights to map all nodes to a weight of infinity represented by Integer.MAX_VALUE
+        //and source vertex to a weight of 0
         for (V v: vertexSet) {
             unvisitedNodes.add(v);
             if (v.equals(source)) {
@@ -241,7 +238,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 }
             }
 
-            //check for shorter path at each neighbour of currentNode not already in visitedNodes
+            //check for shorter path at each neighbour of currentNode that is not already in visitedNodes
             for (V neighbourNode : getNeighbours(currentNode).keySet()) {
                 if (!visitedNodes.contains(neighbourNode)) {
                     if (nodeWeights.get(currentNode) + edgeLength(currentNode, neighbourNode) < nodeWeights.get(neighbourNode)) {
