@@ -59,4 +59,17 @@ public class Vertex {
 
     //// --- any new methods, if necessary, go below this link --- ////
 
+    /**
+     *
+     * @param v
+     * @return
+     */
+    public boolean checkID(Vertex v) {
+        if (id == v.id()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

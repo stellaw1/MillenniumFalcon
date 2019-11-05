@@ -8,14 +8,9 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class GraphTest {
-
-    //test Edge.java constructor and exceptions
-
-    //test Vertex.java constructor
 
     //test Graph.java constructor
     @Test
@@ -24,10 +19,12 @@ public class GraphTest {
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
         Vertex v4 = new Vertex(4, "D");
+        Vertex v5 = new Vertex(5, "E");
 
         Edge<Vertex> e1 = new Edge<>(v1, v2, 5);
         Edge<Vertex> e2 = new Edge<>(v2, v3, 7);
         Edge<Vertex> e3 = new Edge<>(v1, v4, 9);
+        Edge<Vertex> e4 = new Edge<>(v1, v5);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -47,6 +44,15 @@ public class GraphTest {
         assertEquals(e2, g.getEdge(v2, v3));
         assertEquals(expectedPath, g.shortestPath(v3, v4));
         assertEquals(21, g.pathLength(g.shortestPath(v3, v4)));
+
+        //test adding null edges/ vertices fail
+        assertFalse(g.addVertex(null));
+        assertFalse(g.addEdge(null));
+        assertFalse(g.addEdge(e4));
+        assertFalse(g.edge(v1, v5));
+        assertEquals(0, g.edgeLength(v1, v5));
+        assertEquals(null, g.getEdge(null, null));
+        assertEquals(null, g.getEdge(v1, v5));
     }
 
     //test Graph.allEdges and Graph.allVertices and Graph.remove
@@ -77,11 +83,46 @@ public class GraphTest {
         expectedEdgeSet.remove(e2);
         assertEquals(expectedEdgeSet, g.allEdges(v1));
 
+        g.remove(e2);
+        assertEquals(expectedEdgeSet, g.allEdges());
+        assertFalse(g.remove(e2));
+
         Set<Vertex> expectedVertexSet = new HashSet<>();
         expectedVertexSet.add(v2);
         expectedVertexSet.add(v3);
         g.remove(v1);
         assertEquals(expectedVertexSet, g.allVertices());
+        assertFalse(g.remove(v1));
+
+    }
+
+    //test immutability of Graph.java
+    @Test
+    public void testImmutability() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 1);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 3);
+        Edge<Vertex> e3 = new Edge<>(v1, v3, 2);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+
+        Map<Vertex, Edge<Vertex>> expectedMap = new HashMap<>();
+        expectedMap.put(v2, e1);
+        expectedMap.put(v3, e3);
+
+        Map<Vertex, Edge<Vertex>> neighbourMap = g.getNeighbours(v1);
+
+        assertEquals(expectedMap, neighbourMap);
+
 
     }
 
@@ -339,5 +380,8 @@ public class GraphTest {
         assertEquals(3, g.pathLength(shortestPath));
         assertEquals(6, g.diameter());
     }
+
+
+    //checkRep
 
 }
