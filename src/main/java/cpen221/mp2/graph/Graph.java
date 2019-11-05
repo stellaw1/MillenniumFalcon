@@ -146,7 +146,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         return false;
     }
 
-    //TODO should we remove the connecting edge?
     /**
      * Remove a vertex from the graph and check if removed successfully.
      *
@@ -440,7 +439,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     /**
      * Finds the edge that connects two vertices if such an edge exists.
-     * This method does not permit graph mutations.
+     * This method permits graph mutations to returned edge in edgeSet.
      *
      * @param v1 one end of the edge
      * @param v2 the other end of the edge

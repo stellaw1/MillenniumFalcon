@@ -11,10 +11,6 @@ import java.util.*;
  * An instance implements the methods needed to complete the mission.
  */
 public class MillenniumFalcon implements Spaceship {
-    /*
-     * RI:
-     * AF:
-     */
 
     long startTime = System.nanoTime(); // start time of rescue phase
 
