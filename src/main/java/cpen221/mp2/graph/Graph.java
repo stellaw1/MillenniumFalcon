@@ -55,7 +55,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         return vertexSet.contains(v);
     }
 
-    //TODO check that edge is not a loop?
     /**
      * Add an edge of the graph and check if added successfully.
      *
@@ -200,7 +199,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         return new HashSet<E>(edgeSet);
     }
 
-    //TODO check immutability; write tests
     /**
      * Obtain all the neighbours of vertex v.
      * Access to this map does not permit graph mutations.

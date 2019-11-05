@@ -121,7 +121,6 @@ public class MillenniumFalcon implements Spaceship {
         for (Planet a : allPlanets){
             totalSpiceInUniverse += a.spice();
         }
-        System.out.println("max spice = " + totalSpiceInUniverse);
 
         HashSet<Planet> visitedPlanets = new HashSet<>();
 
