@@ -67,9 +67,74 @@ public class MillenniumFalcon implements Spaceship {
 
     @Override
     public void gather(GathererStage state) {
+        Graph <Planet, Link> allPlanetsGraph = (Graph) state.planetGraph();
+        Set<Planet> allPlanets = allPlanetsGraph.allVertices();
+        Planet topLeftPlanet = state.currentPlanet();
+        Planet topRightPlanet = state.currentPlanet();
+        Planet bottomLeftPlanet = state.currentPlanet();
+        Planet bottomRightPlanet = state.currentPlanet();
+        for (Planet checkPlanet : allPlanets){
+            int x = checkPlanet.x();
+            int y = checkPlanet.y();
+                if (x <= topLeftPlanet.x() && y <= topLeftPlanet.y()){
+                    topLeftPlanet = checkPlanet;
+                }
+                if (x >= topRightPlanet.x() && y <= topRightPlanet.y()){
+                    topRightPlanet = checkPlanet;
+                }
+                if (x <= bottomLeftPlanet.x() && y >= bottomLeftPlanet.y()){
+                    bottomLeftPlanet = checkPlanet;
+                }
+                if (x >= bottomRightPlanet.x() && y >= bottomRightPlanet.y()){
+                    bottomRightPlanet = checkPlanet;
+            }
+        }
 
+        int longestPathLength = Math.max( Math.max(allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, topRightPlanet)),
+                allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, bottomLeftPlanet))), allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, bottomRightPlanet)));
+
+        ArrayList<Planet> spiciestPlanets = new ArrayList<>();
+        spiciestPlanets.addAll(allPlanets);
+
+        Collections.sort(spiciestPlanets, new Comparator<Planet>(){
+            @Override
+            public int compare(Planet a, Planet b){
+                return b.spice()-a.spice();
+            }
+        });
+
+        HashSet<Planet> visitedPlanets = new HashSet<>();
+
+        for (Planet nextMostSpicy : spiciestPlanets){
+            if (!visitedPlanets.contains(nextMostSpicy)) {
+                List<Planet> pathToNextPlanet = allPlanetsGraph.shortestPath(state.currentPlanet(), nextMostSpicy);
+                pathToNextPlanet.remove(0);
+                for (Planet nextPlanet : pathToNextPlanet) {
+                    if (state.fuelRemaining() - allPlanetsGraph.getEdge(state.currentPlanet(), nextPlanet).fuelNeeded() > longestPathLength) {
+                        visitedPlanets.add(nextPlanet);
+                        state.moveTo(nextPlanet);
+                    } else {
+                        List<Planet> pathToHome = allPlanetsGraph.shortestPath(state.currentPlanet(), state.earth());
+                        pathToHome.remove(0);
+                        for (Planet next : pathToHome){
+                            state.moveTo(next);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        return;
     }
 //    {
+//        Planet start = state.currentPlanet();
+//        Planet end = state.earth();
+//        ArrayList<Planet> pathFromKamino = new ArrayList<>();
+//        pathFromKamino.add(start);
+//        ArrayList<Planet> pathFromEarth = new ArrayList<>();
+//        pathFromEarth.add(end);
+//        HashSet<Planet> visitedPlanets = new HashSet<Planet>();
 //        int fuelRemaining = state.fuelRemaining();
 //        Graph allPlanetsGraph = (Graph) state.planetGraph();
 //        Planet start = state.currentPlanet();
