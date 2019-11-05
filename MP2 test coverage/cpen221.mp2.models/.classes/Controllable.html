@@ -1,0 +1,158 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Controllable</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">cpen221.mp2.models</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Controllable (cpen221.mp2.models)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+  <tr>
+    <td class="name">Controllable$AbortException</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Controllable$SolutionFailedException</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package cpen221.mp2.models;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import cpen221.mp2.controllers.HunterStage;
+<i>4</i>&nbsp;import cpen221.mp2.controllers.GathererStage;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;/** An instance is controllable by some Controller. */
+<i>7</i>&nbsp;public interface Controllable extends HunterStage, GathererStage {
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;    /** Start the search phase and return an instance that
+<i>10</i>&nbsp;     *  purely implements HuntStage. */
+<i>11</i>&nbsp;    public HunterStage beginHuntStage();
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;    /** Start the gather stage and returns an instance that
+<i>14</i>&nbsp;     *  purely implements GatherStage. */
+<i>15</i>&nbsp;    public GathererStage beginGatherStage();
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    /** End the hunt phase, returning true iff it was successful
+<i>18</i>&nbsp;     * and false otherwise.
+<i>19</i>&nbsp;     * Precondition: the game is in the search phase. */
+<i>20</i>&nbsp;    public boolean endHuntStage();
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    /** End the rescue phase, returning true iff it was successful and
+<i>23</i>&nbsp;     * false otherwise. Precondition: the game is in the rescue phase. */
+<i>24</i>&nbsp;    public boolean endGatherStage();
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /** Advance the simulation by one tick.
+<i>27</i>&nbsp;     * Throw SolutionFailedException if the update causes a failure. */
+<i>28</i>&nbsp;    public void update(int tick) throws SolutionFailedException;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /** Abort the current game. Any attempts to change the state (i.e. by
+<i>31</i>&nbsp;     * moveTo) will result in an exception. This allows the game to instantly
+<i>32</i>&nbsp;     * end a solution, rather than stepping through the entire solution. */
+<i>33</i>&nbsp;    public void abort();
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    /** Set the ship&#39;s current location to n. */
+<i>36</i>&nbsp;    public void setShipLocation(Planet planet);
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    /** An instance indicates that the game has aborted. */
+<i>39</i>&nbsp;    @SuppressWarnings(&quot;serial&quot;)
+<b class="nc"><i>40</i>&nbsp;    public static class AbortException extends RuntimeException {}</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    /** An instance contains a message detailing how a solution failed.  */
+<i>43</i>&nbsp;    @SuppressWarnings(&quot;serial&quot;)
+<i>44</i>&nbsp;    public static class SolutionFailedException extends Exception {
+<i>45</i>&nbsp;        public SolutionFailedException(String msg) {
+<b class="nc"><i>46</i>&nbsp;            super(msg);</b>
+<i>47</i>&nbsp;        }
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-11-05 12:12</div>
+</div>
+</body>
+</html>

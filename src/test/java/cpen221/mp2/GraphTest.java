@@ -340,4 +340,79 @@ public class GraphTest {
         assertEquals(6, g.diameter());
     }
 
+    @Test
+    public void testMultipleGraphElements(){
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+        Vertex v5 = new Vertex(5, "E");
+        Vertex v6 = new Vertex(6, "F");
+        Vertex v7 = new Vertex(7, "G");
+        Vertex v8 = new Vertex(8, "H");
+        //fakeVertex will not be added to graph
+        Vertex fakeVertex = new Vertex(100, "fake vertex");
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 1);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 1);
+        Edge<Vertex> e3 = new Edge<>(v3, v4, 1);
+        Edge<Vertex> e4 = new Edge<>(v2, v4, 1);
+        Edge<Vertex> e5 = new Edge<>(v2, v6, 1);
+        Edge<Vertex> e6 = new Edge<>(v2, v5, 10);
+        Edge<Vertex> e7 = new Edge<>(v5, v6, 10);
+        Edge<Vertex> e8 = new Edge<>(v4, v6, 10);
+        Edge<Vertex> e9 = new Edge<>(v6, v7, 10);
+        Edge<Vertex> e10 = new Edge<>(v7, v8, 10);
+        //fake edge will not be added to graph
+        Edge<Vertex> fakeEdge = new Edge<>(fakeVertex, v1);
+        Edge<Vertex> edgeToRemove = new Edge<>(v2, v7, 200);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addVertex(v5);
+        g.addVertex(v6);
+        g.addVertex(v7);
+        g.addVertex(v8);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+        g.addEdge(e5);
+        g.addEdge(e6);
+        g.addEdge(e7);
+        g.addEdge(e8);
+        g.addEdge(e9);
+        g.addEdge(edgeToRemove);
+        //add an edge to the graph
+        Assert.assertTrue(g.addEdge(e10));
+
+        //adding null edge to graph should not work
+        Assert.assertFalse(g.addEdge(null));
+
+        //adding edge with a non-included vertex should not work
+        Assert.assertFalse(g.addEdge(fakeEdge));
+
+        //trying to get an edge that does not exit in graph should return false
+        Assert.assertFalse(g.edge(v1, fakeVertex));
+
+        //getting length of edge from vertex not-existing in graph should return false
+        Assert.assertEquals(0, g.edgeLength(fakeVertex, v2));
+
+        //Should successfully remove an edge
+        Assert.assertTrue(g.remove(edgeToRemove));
+
+        //Trying to remove non-existent edge should return false
+        Assert.assertFalse(g.remove(fakeEdge));
+
+        //Trying to remove non-existent vertex should return false
+        Assert.assertFalse(g.remove(fakeVertex));
+
+        //Finding the edge that connects two vertices
+        //Should return null if the edge is not an edge in the graph
+        Assert.assertTrue(g.getEdge(v1, fakeVertex) == null);
+    }
+
 }

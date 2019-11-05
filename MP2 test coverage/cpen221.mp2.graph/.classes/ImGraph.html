@@ -1,0 +1,112 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ImGraph</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">cpen221.mp2.graph</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ImGraph (cpen221.mp2.graph)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ImGraph</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package cpen221.mp2.graph;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.List;
+<i>4</i>&nbsp;import java.util.Set;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;public interface ImGraph&lt;V extends Vertex, E extends Edge&lt;V&gt;&gt; {
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;    /**
+<i>9</i>&nbsp;     * Compute the shortest path from source to sink
+<i>10</i>&nbsp;     *
+<i>11</i>&nbsp;     * @param source the start vertex
+<i>12</i>&nbsp;     * @param sink   the end vertex
+<i>13</i>&nbsp;     * @return the vertices, in order, on the shortest path from source to sink (both end points are part of the list)
+<i>14</i>&nbsp;     */
+<i>15</i>&nbsp;    List&lt;V&gt; shortestPath(V source, V sink);
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    /**
+<i>18</i>&nbsp;     * Compute the minimum spanning tree of the graph.
+<i>19</i>&nbsp;     * See https://en.wikipedia.org/wiki/Minimum_spanning_tree
+<i>20</i>&nbsp;     *
+<i>21</i>&nbsp;     * @return a list of edges that forms a minimum spanning tree of the graph
+<i>22</i>&nbsp;     */
+<i>23</i>&nbsp;    List&lt;E&gt; minimumSpanningTree();
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    /**
+<i>26</i>&nbsp;     * Compute the length of a given path
+<i>27</i>&nbsp;     *
+<i>28</i>&nbsp;     * @param path indicates the vertices on the given path
+<i>29</i>&nbsp;     * @return the length of path
+<i>30</i>&nbsp;     */
+<i>31</i>&nbsp;    int pathLength(List&lt;V&gt; path);
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    /**
+<i>34</i>&nbsp;     * Obtain all vertices w that are no more than a &lt;em&gt;path distance&lt;/em&gt; of range from v.
+<i>35</i>&nbsp;     *
+<i>36</i>&nbsp;     * @param v     the vertex to start the search from.
+<i>37</i>&nbsp;     * @param range the radius of the search.
+<i>38</i>&nbsp;     * @return a set of vertices that are within range of v (this set does not contain v).
+<i>39</i>&nbsp;     */
+<i>40</i>&nbsp;    Set&lt;V&gt; search(V v, int range);
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    /**
+<i>43</i>&nbsp;     * Compute the diameter of the graph.
+<i>44</i>&nbsp;     * &lt;ul&gt;
+<i>45</i>&nbsp;     * &lt;li&gt;The diameter of a graph is the length of the longest shortest path in the graph.&lt;/li&gt;
+<i>46</i>&nbsp;     * &lt;li&gt;If a graph has multiple components then we will define the diameter
+<i>47</i>&nbsp;     * as the diameter of the largest component.&lt;/li&gt;
+<i>48</i>&nbsp;     * &lt;/ul&gt;
+<i>49</i>&nbsp;     *
+<i>50</i>&nbsp;     * @return the diameter of the graph.
+<i>51</i>&nbsp;     */
+<i>52</i>&nbsp;    int diameter();
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    /**
+<i>55</i>&nbsp;     * Find the edge that connects two vertices if such an edge exists.
+<i>56</i>&nbsp;     * This method should not permit graph mutations.
+<i>57</i>&nbsp;     *
+<i>58</i>&nbsp;     * @param v1 one end of the edge
+<i>59</i>&nbsp;     * @param v2 the other end of the edge
+<i>60</i>&nbsp;     * @return the edge connecting v1 and v2
+<i>61</i>&nbsp;     */
+<i>62</i>&nbsp;    public E getEdge(V v1, V v2);
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-11-05 12:12</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,200 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GUIView</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">cpen221.mp2.views</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GUIView (cpen221.mp2.views)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GUIView</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 26)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GUIView$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 27)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package cpen221.mp2.views;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import cpen221.mp2.controllers.Controller;
+<i>4</i>&nbsp;import cpen221.mp2.gui.GUI;
+<i>5</i>&nbsp;import cpen221.mp2.models.Model;
+<i>6</i>&nbsp;import cpen221.mp2.models.Model.Stage;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import javax.swing.*;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;/**
+<i>11</i>&nbsp; * An instance represents a graphical view.
+<i>12</i>&nbsp; */
+<i>13</i>&nbsp;public class GUIView implements View {
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    private GUI gui; // The GUI rendering this game
+<i>16</i>&nbsp;    private Controller ctrlr; // The controller of this game&#39;s model
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * Constructor: a GUIView with a blank GUI.
+<i>20</i>&nbsp;     */
+<b class="nc"><i>21</i>&nbsp;    public GUIView() {</b>
+<b class="nc"><i>22</i>&nbsp;        gui = new GUI();</b>
+<b class="nc"><i>23</i>&nbsp;        addTopMenuListeners();</b>
+<i>24</i>&nbsp;    }
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /**
+<i>27</i>&nbsp;     * Add listeners to the top menu to relay user input to the presenter.
+<i>28</i>&nbsp;     */
+<i>29</i>&nbsp;    private void addTopMenuListeners() {
+<b class="nc"><i>30</i>&nbsp;        gui.addStartListener(e -&gt; ctrlr.start());</b>
+<b class="nc"><i>31</i>&nbsp;        gui.addResetListener(e -&gt; ctrlr.reset());</b>
+<b class="nc"><i>32</i>&nbsp;        gui.addNewMapListener(e -&gt; ctrlr.newGame(JOptionPane.showInputDialog(</b>
+<i>33</i>&nbsp;                &quot;Enter either a valid seed, or anything else to get a random seed.&quot;)));
+<i>34</i>&nbsp;    }
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    @Override
+<i>37</i>&nbsp;    public void init(Controller c, Model m) {
+<b class="nc"><i>38</i>&nbsp;        ctrlr = c;</b>
+<b class="nc"><i>39</i>&nbsp;        gui.setStartEnabled(true);</b>
+<b class="nc"><i>40</i>&nbsp;        gui.init(c, m);</b>
+<b class="nc"><i>41</i>&nbsp;        outprintln(&quot;Seed: &quot; + m.seed());</b>
+<i>42</i>&nbsp;    }
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    @Override
+<i>45</i>&nbsp;    public void beginStage(Stage s) {
+<b class="nc"><i>46</i>&nbsp;        gui.beginStage(s);</b>
+<b class="nc"><i>47</i>&nbsp;        gui.setStartEnabled(false);</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    @Override
+<i>51</i>&nbsp;    public void endStage(Stage s) {
+<b class="nc"><i>52</i>&nbsp;        gui.endPhase(s);</b>
+<b class="nc"><i>53</i>&nbsp;        switch (s) {</b>
+<i>54</i>&nbsp;            case HUNT:
+<b class="nc"><i>55</i>&nbsp;                if (ctrlr.huntSucceeded()) {</b>
+<b class="nc"><i>56</i>&nbsp;                    outprintln(&quot;Hunt Stage ended successfully!&quot;);</b>
+<i>57</i>&nbsp;                }
+<i>58</i>&nbsp;                break;
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;            case GATHER:
+<b class="nc"><i>61</i>&nbsp;                if (ctrlr.gatherSucceeded()) {</b>
+<b class="nc"><i>62</i>&nbsp;                    outprintln(&quot;Gather Stage ended successfully!&quot;);</b>
+<i>63</i>&nbsp;                }
+<i>64</i>&nbsp;                break;
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;            default:
+<i>67</i>&nbsp;        }
+<i>68</i>&nbsp;    }
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    @Override
+<i>71</i>&nbsp;    public void endGame(int score) {
+<b class="nc"><i>72</i>&nbsp;        gui.pause();</b>
+<b class="nc"><i>73</i>&nbsp;        if (ctrlr.gatherSucceeded()) {</b>
+<b class="nc"><i>74</i>&nbsp;            outprintln(&quot;Score: &quot; + score);</b>
+<i>75</i>&nbsp;        } else {
+<b class="nc"><i>76</i>&nbsp;            errprintln(&quot;Score: &quot; + score);</b>
+<i>77</i>&nbsp;        }
+<i>78</i>&nbsp;    }
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;    @Override
+<i>81</i>&nbsp;    public void errprint(String s) {
+<b class="nc"><i>82</i>&nbsp;        View.super.errprint(s);</b>
+<b class="nc"><i>83</i>&nbsp;        gui.errprint(s);</b>
+<i>84</i>&nbsp;    }
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;    @Override
+<i>87</i>&nbsp;    public void outprint(String s) {
+<b class="nc"><i>88</i>&nbsp;        View.super.outprint(s);</b>
+<b class="nc"><i>89</i>&nbsp;        gui.outprint(s);</b>
+<i>90</i>&nbsp;    }
+<i>91</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-11-05 12:12</div>
+</div>
+</body>
+</html>

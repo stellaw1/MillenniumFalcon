@@ -1,0 +1,121 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Util</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">cpen221.mp2.util</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Util (cpen221.mp2.util)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Util</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 7)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package cpen221.mp2.util;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * Contains various static utility functions and constants.
+<i>5</i>&nbsp; */
+<b class="nc"><i>6</i>&nbsp;public abstract class Util {</b>
+<i>7</i>&nbsp;    public static final String EARTH_NAME = &quot;Earth&quot;;
+<i>8</i>&nbsp;    public static final String CRASHED_PLANET_NAME = &quot;Kamino&quot;;
+<b class="nc"><i>9</i>&nbsp;    public static final String DIRECTORY = System.getProperty(&quot;user.dir&quot;);</b>
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;    /**
+<i>12</i>&nbsp;     * Return true iff any of the given arguments are null.
+<i>13</i>&nbsp;     *
+<i>14</i>&nbsp;     * @param objects list of objects to check if any is null.
+<i>15</i>&nbsp;     * @return true if one or more objects is null and false otherwise.
+<i>16</i>&nbsp;     */
+<i>17</i>&nbsp;    public static boolean anyNull(Object... objects) {
+<b class="nc"><i>18</i>&nbsp;        for (Object obj : objects) {</b>
+<b class="nc"><i>19</i>&nbsp;            if (obj == null) {</b>
+<b class="nc"><i>20</i>&nbsp;                return true;</b>
+<i>21</i>&nbsp;            }
+<i>22</i>&nbsp;        }
+<b class="nc"><i>23</i>&nbsp;        return false;</b>
+<i>24</i>&nbsp;    }
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /**
+<i>27</i>&nbsp;     * Return the Euclidean distance between (x1, y1) and (x2, y2).
+<i>28</i>&nbsp;     *
+<i>29</i>&nbsp;     * @param x1 the first x-coordinate
+<i>30</i>&nbsp;     * @param y1 the first y-coordinate
+<i>31</i>&nbsp;     * @param x2 the second x-coordinate
+<i>32</i>&nbsp;     * @param y2 the second y-coordinate
+<i>33</i>&nbsp;     * @return the Euclidean distance between (x1, y1) and (x2, y2)
+<i>34</i>&nbsp;     */
+<i>35</i>&nbsp;    public static double distance(double x1, double y1, double x2, double y2) {
+<b class="nc"><i>36</i>&nbsp;        return Math.sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));</b>
+<i>37</i>&nbsp;    }
+<i>38</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-11-05 12:12</div>
+</div>
+</body>
+</html>

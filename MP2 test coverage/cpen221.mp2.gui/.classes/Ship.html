@@ -1,0 +1,116 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Ship</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">cpen221.mp2.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Ship (cpen221.mp2.gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Ship</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package cpen221.mp2.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.awt.*;
+<i>4</i>&nbsp;import java.awt.geom.Point2D;
+<i>5</i>&nbsp;import java.awt.geom.Rectangle2D;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;/**
+<i>8</i>&nbsp; * An instance represents a Drawable Ship somewhere on a cpen221.mp2.graph.Graph.
+<i>9</i>&nbsp; */
+<i>10</i>&nbsp;public class Ship extends Circle {
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;    /* The diameter of this Ship when drawn. */
+<i>13</i>&nbsp;    private static final int DIAMETER = 12;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    /* The color of this Ship when drawn. */
+<b class="nc"><i>16</i>&nbsp;    private static final Color SHIP_COLOR = new Color(240, 246, 255);</b>
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * Constructor: a Ship starting at Point p in area area and
+<i>20</i>&nbsp;     * bounds bounds with speed speed, whose name&#39;s size is determined
+<i>21</i>&nbsp;     * via fm.
+<i>22</i>&nbsp;     */
+<i>23</i>&nbsp;    public Ship(Point2D p, Rectangle2D area, Rectangle2D bounds, int speed,
+<i>24</i>&nbsp;                FontMetrics fm) {
+<b class="nc"><i>25</i>&nbsp;        super(&quot;You&quot;, p, area, bounds, DIAMETER, SHIP_COLOR, fm);</b>
+<i>26</i>&nbsp;    }
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    @Override
+<i>29</i>&nbsp;    public void draw(Graphics2D g) {
+<b class="nc"><i>30</i>&nbsp;        updateDrawnLocation();</b>
+<b class="nc"><i>31</i>&nbsp;        super.draw(g);</b>
+<i>32</i>&nbsp;    }
+<i>33</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-11-05 12:12</div>
+</div>
+</body>
+</html>

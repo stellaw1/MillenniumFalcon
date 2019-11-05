@@ -1,0 +1,128 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: QuietView</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">cpen221.mp2.views</a> ]
+</div>
+
+<h1>Coverage Summary for Class: QuietView (cpen221.mp2.views)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">QuietView</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package cpen221.mp2.views;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import cpen221.mp2.controllers.Controller;
+<i>4</i>&nbsp;import cpen221.mp2.models.Model;
+<i>5</i>&nbsp;import cpen221.mp2.models.Model.Stage;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;/**
+<i>8</i>&nbsp; * An instance is a view of the Space Gems Game that immediately
+<i>9</i>&nbsp; * starts one game and outputs nothing.
+<i>10</i>&nbsp; */
+<b class="nc"><i>11</i>&nbsp;public class QuietView implements View {</b>
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;    /* True iff the game is still running. */
+<i>14</i>&nbsp;    protected boolean running;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    @Override
+<i>17</i>&nbsp;    public void init(Controller c, Model m) {
+<b class="nc"><i>18</i>&nbsp;        c.start();</b>
+<b class="nc"><i>19</i>&nbsp;        running = true;</b>
+<b class="nc"><i>20</i>&nbsp;        while (running) {</b>
+<b class="nc"><i>21</i>&nbsp;            c.update();</b>
+<i>22</i>&nbsp;        }
+<i>23</i>&nbsp;    }
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    @Override
+<i>26</i>&nbsp;    public void beginStage(Stage s) {
+<i>27</i>&nbsp;    }
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    @Override
+<i>30</i>&nbsp;    public void endStage(Stage s) {
+<i>31</i>&nbsp;    }
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    @Override
+<i>34</i>&nbsp;    public void endGame(int score) {
+<b class="nc"><i>35</i>&nbsp;        running = false;</b>
+<i>36</i>&nbsp;    }
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    @Override
+<i>39</i>&nbsp;    public void outprint(String s) {
+<i>40</i>&nbsp;    }
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    @Override
+<i>43</i>&nbsp;    public void errprint(String s) {
+<i>44</i>&nbsp;    }
+<i>45</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-11-05 12:12</div>
+</div>
+</body>
+</html>

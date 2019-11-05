@@ -1,0 +1,489 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GUI</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">cpen221.mp2.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GUI (cpen221.mp2.gui)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GUI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 107)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GUI$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">GUI$Renderer</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 20)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 128)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package cpen221.mp2.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import cpen221.mp2.controllers.Controller;
+<i>4</i>&nbsp;import cpen221.mp2.models.Model;
+<i>5</i>&nbsp;import cpen221.mp2.models.Model.Stage;
+<i>6</i>&nbsp;import cpen221.mp2.models.Planet;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import javax.swing.*;
+<i>9</i>&nbsp;import java.awt.*;
+<i>10</i>&nbsp;import java.awt.event.ActionListener;
+<i>11</i>&nbsp;import java.awt.event.ItemEvent;
+<i>12</i>&nbsp;import java.util.List;
+<i>13</i>&nbsp;import java.util.concurrent.TimeUnit;
+<i>14</i>&nbsp;import java.util.concurrent.TimeoutException;
+<i>15</i>&nbsp;import java.util.function.Consumer;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;import static cpen221.mp2.gui.SidePanel.StatName.*;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;/**
+<i>20</i>&nbsp; * An instance is a graphical representation of a Kamino game.
+<i>21</i>&nbsp; */
+<i>22</i>&nbsp;@SuppressWarnings(&quot;serial&quot;)
+<i>23</i>&nbsp;public class GUI extends JFrame {
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    /* Define buffers to base initial interface drawing on */
+<i>26</i>&nbsp;    public static final int X_BUFFER = 100;
+<i>27</i>&nbsp;    public static final int Y_BUFFER = 50;
+<i>28</i>&nbsp;    /* Minimum size of the drawing board screen */
+<i>29</i>&nbsp;    public static final int DRAWING_BOARD_WIDTH_MIN = 400;
+<i>30</i>&nbsp;    public static final int DRAWING_BOARD_HEIGHT_MIN = 400;
+<i>31</i>&nbsp;    /* Dynamic based on the screen size the user has */
+<i>32</i>&nbsp;    public static final int DRAWING_BOARD_WIDTH;
+<i>33</i>&nbsp;    public static final int DRAWING_BOARD_HEIGHT;
+<i>34</i>&nbsp;    /* Two panels aside from the drawing board (fixed dimensions) */
+<i>35</i>&nbsp;    public static final int UPDATE_PANEL_HEIGHT = 100;
+<i>36</i>&nbsp;    public static final int SIDE_PANEL_WIDTH = 300;
+<i>37</i>&nbsp;    /* Game title */
+<i>38</i>&nbsp;    private static final String GAME = &quot;Kamino&quot;;
+<i>39</i>&nbsp;    /* How long to wait for an old renderer to terminate */
+<i>40</i>&nbsp;    private static final int RESET_TIMEOUT = 3;
+<b class="nc"><i>41</i>&nbsp;    private static final TimeUnit RESET_TIMEOUT_UNITS = TimeUnit.SECONDS;</b>
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    /* Set the (width, height) based on user&#39;s screen size */
+<i>44</i>&nbsp;    static {
+<b class="nc"><i>45</i>&nbsp;        Dimension s = Toolkit.getDefaultToolkit().getScreenSize();</b>
+<b class="nc"><i>46</i>&nbsp;        DRAWING_BOARD_WIDTH = s.width - SIDE_PANEL_WIDTH - 2 * X_BUFFER;</b>
+<b class="nc"><i>47</i>&nbsp;        DRAWING_BOARD_HEIGHT = (int) (s.height * 0.8) - UPDATE_PANEL_HEIGHT</b>
+<i>48</i>&nbsp;                - 2 * Y_BUFFER;
+<i>49</i>&nbsp;    }
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    /* Various panels of the GUI */
+<i>52</i>&nbsp;    private SpacePanel spacePanel;
+<i>53</i>&nbsp;    private SidePanel sidePanel;
+<i>54</i>&nbsp;    private TopMenu menuBar;
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    /* The model that this GUI is displaying. */
+<i>57</i>&nbsp;    private Model model;
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    /* The controller of this game */
+<i>60</i>&nbsp;    private Controller ctrlr;
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    /* True iff the model has entered the rescue phase. */
+<i>63</i>&nbsp;    private boolean gatherStage;
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;    /* True iff the GUI should pause when ending the search stage. */
+<i>66</i>&nbsp;    private boolean pauseSearchEnds;
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    /* Simulation speed factor; 1 = normal speed, 2 = 2x speed, etc. */
+<i>69</i>&nbsp;    private int simSpeed;
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    /* iff true, a Renderer will continue to run */
+<i>72</i>&nbsp;    private boolean running;
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;    /* iff true, a Renderer will not update the model */
+<i>75</i>&nbsp;    private boolean paused;
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;    /* The current renderer for this GUI. */
+<i>78</i>&nbsp;    private Renderer renderer;
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;    /* The currently selected Node. */
+<i>81</i>&nbsp;    private Planet clicked;
+<i>82</i>&nbsp;    /* The function to run when a Node is clicked. */
+<b class="nc"><i>83</i>&nbsp;    private Consumer&lt;Planet&gt; nodeClicked = n -&gt; {</b>
+<b class="nc"><i>84</i>&nbsp;        clicked = n;</b>
+<b class="nc"><i>85</i>&nbsp;        if (n != null) {</b>
+<b class="nc"><i>86</i>&nbsp;            sidePanel.setClicked(spacePanel.getPlanet(n));</b>
+<i>87</i>&nbsp;        } else {
+<b class="nc"><i>88</i>&nbsp;            sidePanel.resetClicked();</b>
+<i>89</i>&nbsp;        }
+<b class="nc"><i>90</i>&nbsp;        updateClickedStats();</b>
+<i>91</i>&nbsp;    };
+<i>92</i>&nbsp;
+<i>93</i>&nbsp;    /**
+<i>94</i>&nbsp;     * Constructor: a paused GUI that displays an empty SpacePanel.
+<i>95</i>&nbsp;     */
+<i>96</i>&nbsp;    public GUI() {
+<b class="nc"><i>97</i>&nbsp;        super(GUI.GAME);</b>
+<b class="nc"><i>98</i>&nbsp;        setMinimumSize(new Dimension(SIDE_PANEL_WIDTH + DRAWING_BOARD_WIDTH_MIN,</b>
+<i>99</i>&nbsp;                UPDATE_PANEL_HEIGHT + DRAWING_BOARD_HEIGHT_MIN));
+<b class="nc"><i>100</i>&nbsp;        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);</b>
+<b class="nc"><i>101</i>&nbsp;        setLocationByPlatform(true);</b>
+<i>102</i>&nbsp;
+<b class="nc"><i>103</i>&nbsp;        spacePanel = new SpacePanel(DRAWING_BOARD_WIDTH, DRAWING_BOARD_HEIGHT);</b>
+<b class="nc"><i>104</i>&nbsp;        sidePanel = new SidePanel(SIDE_PANEL_WIDTH, DRAWING_BOARD_HEIGHT);</b>
+<b class="nc"><i>105</i>&nbsp;        menuBar = new TopMenu();</b>
+<b class="nc"><i>106</i>&nbsp;        getContentPane().add(spacePanel, BorderLayout.CENTER);</b>
+<b class="nc"><i>107</i>&nbsp;        getContentPane().add(sidePanel, BorderLayout.WEST);</b>
+<b class="nc"><i>108</i>&nbsp;        setJMenuBar(menuBar);</b>
+<b class="nc"><i>109</i>&nbsp;        addKeyListener(spacePanel.spacePanelCameraMover());</b>
+<b class="nc"><i>110</i>&nbsp;        spacePanel.callWhenClicked(nodeClicked);</b>
+<i>111</i>&nbsp;
+<b class="nc"><i>112</i>&nbsp;        simSpeed = SidePanel.INITIAL_SPEED;</b>
+<i>113</i>&nbsp;
+<i>114</i>&nbsp;        // connect listeners
+<b class="nc"><i>115</i>&nbsp;        sidePanel.addSpeedSliderListener(</b>
+<b class="nc"><i>116</i>&nbsp;                e -&gt; simSpeed = ((JSlider) e.getSource()).getValue());</b>
+<i>117</i>&nbsp;        sidePanel.addFollowShipListener(e -&gt; spacePanel
+<b class="nc"><i>118</i>&nbsp;                .setFollowShip(e.getStateChange() == ItemEvent.SELECTED));</b>
+<b class="nc"><i>119</i>&nbsp;        sidePanel.addZoomSliderListener(</b>
+<b class="nc"><i>120</i>&nbsp;                e -&gt; spacePanel.setZoom(((JSlider) e.getSource()).getValue()));</b>
+<b class="nc"><i>121</i>&nbsp;        sidePanel.addPauseListener(e -&gt; {</b>
+<b class="nc"><i>122</i>&nbsp;            if (e.getStateChange() == ItemEvent.SELECTED) {</b>
+<b class="nc"><i>123</i>&nbsp;                pause();</b>
+<i>124</i>&nbsp;            } else {
+<b class="nc"><i>125</i>&nbsp;                unpause();</b>
+<i>126</i>&nbsp;            }
+<i>127</i>&nbsp;        });
+<b class="nc"><i>128</i>&nbsp;        sidePanel.addPauseOnReturnListener(</b>
+<b class="nc"><i>129</i>&nbsp;                e -&gt; pauseSearchEnds = e.getStateChange() == ItemEvent.SELECTED);</b>
+<i>130</i>&nbsp;
+<b class="nc"><i>131</i>&nbsp;        pack();</b>
+<b class="nc"><i>132</i>&nbsp;        validate();</b>
+<b class="nc"><i>133</i>&nbsp;        repaint();</b>
+<b class="nc"><i>134</i>&nbsp;        setVisible(true);</b>
+<i>135</i>&nbsp;    }
+<i>136</i>&nbsp;
+<i>137</i>&nbsp;    ;
+<i>138</i>&nbsp;
+<i>139</i>&nbsp;    /**
+<i>140</i>&nbsp;     * Render the current state of the game.
+<i>141</i>&nbsp;     */
+<i>142</i>&nbsp;    private void render() {
+<b class="nc"><i>143</i>&nbsp;        spacePanel.update();</b>
+<b class="nc"><i>144</i>&nbsp;        updateStats();</b>
+<b class="nc"><i>145</i>&nbsp;        updateClickedStats();</b>
+<i>146</i>&nbsp;    }
+<i>147</i>&nbsp;
+<i>148</i>&nbsp;    /**
+<i>149</i>&nbsp;     * Update the displayed stats for the clicked Node.
+<i>150</i>&nbsp;     */
+<i>151</i>&nbsp;    private void updateClickedStats() {
+<b class="nc"><i>152</i>&nbsp;        if (clicked != null &amp;&amp; gatherStage) {</b>
+<b class="nc"><i>153</i>&nbsp;            sidePanel.setClickedSpice(Integer.toString(clicked.spice()));</b>
+<i>154</i>&nbsp;        }
+<b class="nc"><i>155</i>&nbsp;        sidePanel.repaint();</b>
+<i>156</i>&nbsp;    }
+<i>157</i>&nbsp;
+<i>158</i>&nbsp;    /**
+<i>159</i>&nbsp;     * Update the current stats of the game.
+<i>160</i>&nbsp;     */
+<i>161</i>&nbsp;    private void updateStats() {
+<b class="nc"><i>162</i>&nbsp;        sidePanel.updateStat(PREVIOUS_NAME, model.shipNode().name(), null);</b>
+<b class="nc"><i>163</i>&nbsp;        sidePanel.updateStat(SCORE, Integer.toString(model.score()), null);</b>
+<b class="nc"><i>164</i>&nbsp;        if (gatherStage) {</b>
+<b class="nc"><i>165</i>&nbsp;            String spice = Integer.toString(model.spice());</b>
+<b class="nc"><i>166</i>&nbsp;            sidePanel.updateStat(SPICE, spice, null);</b>
+<b class="nc"><i>167</i>&nbsp;            sidePanel.updateStat(GATHERED_SCORE, spice, null);</b>
+<b class="nc"><i>168</i>&nbsp;            int fuel = model.fuelRemaining();</b>
+<b class="nc"><i>169</i>&nbsp;            sidePanel.updateStat(FUEL_LEFT, Integer.toString(fuel),</b>
+<b class="nc"><i>170</i>&nbsp;                    fuel &gt; 0 ? Color.GREEN : Color.RED);</b>
+<b class="nc"><i>171</i>&nbsp;        } else {</b>
+<b class="nc"><i>172</i>&nbsp;            sidePanel.updateStat(FUEL_USED, Integer.toString(model.fuelUsed()), null);</b>
+<b class="nc"><i>173</i>&nbsp;            sidePanel.updateStat(HUNT_SCORE, Integer.toString(model.score()), null);</b>
+<i>174</i>&nbsp;        }
+<i>175</i>&nbsp;    }
+<i>176</i>&nbsp;
+<i>177</i>&nbsp;    /**
+<i>178</i>&nbsp;     * Initialize this GUI to display the game with m and c,
+<i>179</i>&nbsp;     * overwriting any previous GUI.
+<i>180</i>&nbsp;     */
+<i>181</i>&nbsp;    public void init(Controller c, Model m) {
+<b class="nc"><i>182</i>&nbsp;        if (!m.planets().contains(clicked)) {</b>
+<b class="nc"><i>183</i>&nbsp;            clicked = null;</b>
+<i>184</i>&nbsp;        }
+<i>185</i>&nbsp;
+<b class="nc"><i>186</i>&nbsp;        model = m;</b>
+<b class="nc"><i>187</i>&nbsp;        ctrlr = c;</b>
+<i>188</i>&nbsp;
+<b class="nc"><i>189</i>&nbsp;        running = false;</b>
+<b class="nc"><i>190</i>&nbsp;        paused = true;</b>
+<b class="nc"><i>191</i>&nbsp;        gatherStage = false;</b>
+<i>192</i>&nbsp;
+<b class="nc"><i>193</i>&nbsp;        spacePanel.init(m);</b>
+<b class="nc"><i>194</i>&nbsp;        sidePanel.init(m.seed());</b>
+<i>195</i>&nbsp;
+<b class="nc"><i>196</i>&nbsp;        if (renderer != null) {</b>
+<b class="nc"><i>197</i>&nbsp;            running = false;</b>
+<i>198</i>&nbsp;            try {
+<b class="nc"><i>199</i>&nbsp;                renderer.get(RESET_TIMEOUT, RESET_TIMEOUT_UNITS);</b>
+<i>200</i>&nbsp;            }
+<b class="nc"><i>201</i>&nbsp;            catch (TimeoutException e) {</b>
+<b class="nc"><i>202</i>&nbsp;                System.err.println(&quot;error: old GUI not responding!\n&quot;</b>
+<i>203</i>&nbsp;                        + &quot;You may want to close this program.&quot;);
+<i>204</i>&nbsp;
+<i>205</i>&nbsp;            }
+<b class="nc"><i>206</i>&nbsp;            catch (Exception e) {</b>
+<b class="nc"><i>207</i>&nbsp;            }</b>
+<i>208</i>&nbsp;        }
+<b class="nc"><i>209</i>&nbsp;        renderer = new Renderer();</b>
+<b class="nc"><i>210</i>&nbsp;        renderer.execute();</b>
+<i>211</i>&nbsp;    }
+<i>212</i>&nbsp;
+<i>213</i>&nbsp;    /**
+<i>214</i>&nbsp;     * Pause this GUI, preventing it from updating to the game&#39;s state.
+<i>215</i>&nbsp;     */
+<i>216</i>&nbsp;    public void pause() {
+<b class="nc"><i>217</i>&nbsp;        paused = true;</b>
+<b class="nc"><i>218</i>&nbsp;        sidePanel.setPauseBox(true);</b>
+<i>219</i>&nbsp;    }
+<i>220</i>&nbsp;
+<i>221</i>&nbsp;    /**
+<i>222</i>&nbsp;     * Unpause this GUI, allowing it to update and reflect the game&#39;s state.
+<i>223</i>&nbsp;     */
+<i>224</i>&nbsp;    public void unpause() {
+<b class="nc"><i>225</i>&nbsp;        paused = false;</b>
+<b class="nc"><i>226</i>&nbsp;        sidePanel.setPauseBox(false);</b>
+<i>227</i>&nbsp;    }
+<i>228</i>&nbsp;
+<i>229</i>&nbsp;    /**
+<i>230</i>&nbsp;     * Signal that stage s has begun.
+<i>231</i>&nbsp;     */
+<i>232</i>&nbsp;    public void beginStage(Stage s) {
+<b class="nc"><i>233</i>&nbsp;        switch (s) {</b>
+<i>234</i>&nbsp;            case HUNT:
+<b class="nc"><i>235</i>&nbsp;                sidePanel.clearMessages();</b>
+<b class="nc"><i>236</i>&nbsp;                sidePanel.updateStat(HUNT, &quot;Hunt stage underway...&quot;, Color.RED);</b>
+<b class="nc"><i>237</i>&nbsp;                unpause();</b>
+<b class="nc"><i>238</i>&nbsp;                break;</b>
+<i>239</i>&nbsp;
+<i>240</i>&nbsp;            case GATHER:
+<b class="nc"><i>241</i>&nbsp;                gatherStage = true;</b>
+<b class="nc"><i>242</i>&nbsp;                sidePanel.updateStat(GATHER, &quot;Gather stage underway...&quot;, Color.RED);</b>
+<b class="nc"><i>243</i>&nbsp;                break;</b>
+<i>244</i>&nbsp;
+<i>245</i>&nbsp;            case NONE:
+<i>246</i>&nbsp;        }
+<i>247</i>&nbsp;    }
+<i>248</i>&nbsp;
+<i>249</i>&nbsp;    /**
+<i>250</i>&nbsp;     * Signal that phase s has ended.
+<i>251</i>&nbsp;     */
+<i>252</i>&nbsp;    public void endPhase(Stage s) {
+<b class="nc"><i>253</i>&nbsp;        switch (s) {</b>
+<i>254</i>&nbsp;            case HUNT:
+<b class="nc"><i>255</i>&nbsp;                if (model.huntSucceeded()) {</b>
+<b class="nc"><i>256</i>&nbsp;                    sidePanel.updateStat(HUNT, &quot;Hunt stage complete!&quot;, Color.GREEN);</b>
+<i>257</i>&nbsp;                } else {
+<b class="nc"><i>258</i>&nbsp;                    sidePanel.updateStat(HUNT, &quot;Hunt stage failed!&quot;, Color.RED);</b>
+<b class="nc"><i>259</i>&nbsp;                    sidePanel.updateStat(HUNT_SCORE, &quot;0&quot;, Color.RED);</b>
+<b class="nc"><i>260</i>&nbsp;                    sidePanel.updateStat(SCORE, &quot;0&quot;, Color.RED);</b>
+<i>261</i>&nbsp;                }
+<b class="nc"><i>262</i>&nbsp;                if (pauseSearchEnds) {</b>
+<b class="nc"><i>263</i>&nbsp;                    pause();</b>
+<i>264</i>&nbsp;                }
+<i>265</i>&nbsp;                break;
+<i>266</i>&nbsp;
+<i>267</i>&nbsp;            case GATHER:
+<b class="nc"><i>268</i>&nbsp;                if (model.gatherSucceeded()) {</b>
+<b class="nc"><i>269</i>&nbsp;                    sidePanel.updateStat(GATHER, &quot;Gather stage complete!&quot;, Color.GREEN);</b>
+<i>270</i>&nbsp;                } else {
+<b class="nc"><i>271</i>&nbsp;                    sidePanel.updateStat(GATHER, &quot;Gather stage failed!&quot;, Color.RED);</b>
+<b class="nc"><i>272</i>&nbsp;                    sidePanel.updateStat(GATHERED_SCORE, &quot;0&quot;, Color.RED);</b>
+<b class="nc"><i>273</i>&nbsp;                    sidePanel.updateStat(SCORE, &quot;0&quot;, Color.RED);</b>
+<b class="nc"><i>274</i>&nbsp;                    pause();</b>
+<i>275</i>&nbsp;                }
+<b class="nc"><i>276</i>&nbsp;                break;</b>
+<i>277</i>&nbsp;
+<i>278</i>&nbsp;            default:
+<i>279</i>&nbsp;        }
+<i>280</i>&nbsp;    }
+<i>281</i>&nbsp;
+<i>282</i>&nbsp;    /**
+<i>283</i>&nbsp;     * Add listener to the top menu&#39;s &quot;Start&quot; item.
+<i>284</i>&nbsp;     */
+<i>285</i>&nbsp;    public void addStartListener(ActionListener listener) {
+<b class="nc"><i>286</i>&nbsp;        menuBar.getStartItem().addActionListener(listener);</b>
+<i>287</i>&nbsp;    }
+<i>288</i>&nbsp;
+<i>289</i>&nbsp;    /**
+<i>290</i>&nbsp;     * Enable or disable the &quot;Start&quot; item.
+<i>291</i>&nbsp;     */
+<i>292</i>&nbsp;    public void setStartEnabled(boolean enabled) {
+<b class="nc"><i>293</i>&nbsp;        menuBar.getStartItem().setEnabled(enabled);</b>
+<i>294</i>&nbsp;    }
+<i>295</i>&nbsp;
+<i>296</i>&nbsp;    /**
+<i>297</i>&nbsp;     * Add listener to the top menu&#39;s &quot;Reset&quot; item.
+<i>298</i>&nbsp;     */
+<i>299</i>&nbsp;    public void addResetListener(ActionListener listener) {
+<b class="nc"><i>300</i>&nbsp;        menuBar.getResetItem().addActionListener(listener);</b>
+<i>301</i>&nbsp;    }
+<i>302</i>&nbsp;
+<i>303</i>&nbsp;    /**
+<i>304</i>&nbsp;     * Add an listener to the top menu&#39;s &quot;New Map&quot; item.
+<i>305</i>&nbsp;     */
+<i>306</i>&nbsp;    public void addNewMapListener(ActionListener listener) {
+<b class="nc"><i>307</i>&nbsp;        menuBar.getNewMapItem().addActionListener(listener);</b>
+<i>308</i>&nbsp;    }
+<i>309</i>&nbsp;
+<i>310</i>&nbsp;    /**
+<i>311</i>&nbsp;     * Print error message s in the SidePanel.
+<i>312</i>&nbsp;     */
+<i>313</i>&nbsp;    public void errprint(String s) {
+<b class="nc"><i>314</i>&nbsp;        sidePanel.addMessage(s, Color.RED);</b>
+<i>315</i>&nbsp;    }
+<i>316</i>&nbsp;
+<i>317</i>&nbsp;    /*** Print regular message s in the SidePanel. */
+<i>318</i>&nbsp;    public void outprint(String s) {
+<b class="nc"><i>319</i>&nbsp;        sidePanel.addMessage(s, Color.GREEN);</b>
+<i>320</i>&nbsp;    }
+<i>321</i>&nbsp;
+<i>322</i>&nbsp;    /**
+<i>323</i>&nbsp;     * An instance animates a Kamino game.
+<i>324</i>&nbsp;     */
+<b class="nc"><i>325</i>&nbsp;    private class Renderer extends SwingWorker&lt;Void, Void&gt; {</b>
+<i>326</i>&nbsp;        @Override
+<i>327</i>&nbsp;        protected Void doInBackground() {
+<b class="nc"><i>328</i>&nbsp;            running = true;</b>
+<b class="nc"><i>329</i>&nbsp;            long prevTime = System.nanoTime();</b>
+<b class="nc"><i>330</i>&nbsp;            long deltaTime = 0;</b>
+<b class="nc"><i>331</i>&nbsp;            while (running) {</b>
+<b class="nc"><i>332</i>&nbsp;                if (!paused) {</b>
+<b class="nc"><i>333</i>&nbsp;                    long time = System.nanoTime();</b>
+<b class="nc"><i>334</i>&nbsp;                    deltaTime += time - prevTime;</b>
+<b class="nc"><i>335</i>&nbsp;                    prevTime = time;</b>
+<i>336</i>&nbsp;
+<b class="nc"><i>337</i>&nbsp;                    while (deltaTime &gt;= (Controller.TICKTIME * 1e6)) {</b>
+<b class="nc"><i>338</i>&nbsp;                        deltaTime -= (Controller.TICKTIME * 1e6);</b>
+<b class="nc"><i>339</i>&nbsp;                        for (int i = 0; i &lt; simSpeed; ++i) {</b>
+<b class="nc"><i>340</i>&nbsp;                            ctrlr.update();</b>
+<i>341</i>&nbsp;                        }
+<i>342</i>&nbsp;                    }
+<b class="nc"><i>343</i>&nbsp;                } else {</b>
+<b class="nc"><i>344</i>&nbsp;                    prevTime = System.nanoTime();</b>
+<i>345</i>&nbsp;                }
+<i>346</i>&nbsp;
+<b class="nc"><i>347</i>&nbsp;                publish((Void) null);</b>
+<i>348</i>&nbsp;            }
+<i>349</i>&nbsp;
+<b class="nc"><i>350</i>&nbsp;            render();</b>
+<b class="nc"><i>351</i>&nbsp;            return null;</b>
+<i>352</i>&nbsp;        }
+<i>353</i>&nbsp;
+<i>354</i>&nbsp;        @Override
+<i>355</i>&nbsp;        protected void process(List&lt;Void&gt; chunks) {
+<b class="nc"><i>356</i>&nbsp;            if (running) {</b>
+<b class="nc"><i>357</i>&nbsp;                render();</b>
+<i>358</i>&nbsp;            }
+<i>359</i>&nbsp;        }
+<i>360</i>&nbsp;    }
+<i>361</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-11-05 12:12</div>
+</div>
+</body>
+</html>
