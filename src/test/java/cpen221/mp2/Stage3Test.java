@@ -2,15 +2,8 @@ package cpen221.mp2;
 
 import cpen221.mp2.controllers.Kamino;
 import cpen221.mp2.spaceship.MillenniumFalcon;
-import cpen221.mp2.views.BenchmarkView;
-import cpen221.mp2.views.CLIView;
 import cpen221.mp2.views.QuietView;
-import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.*;
-
-
 import static org.junit.Assert.*;
 
 public class Stage3Test {
