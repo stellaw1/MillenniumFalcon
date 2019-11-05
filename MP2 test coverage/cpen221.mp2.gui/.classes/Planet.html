@@ -1,0 +1,138 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Planet</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">cpen221.mp2.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Planet (cpen221.mp2.gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Planet</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 10)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package cpen221.mp2.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import cpen221.mp2.util.Util;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.awt.*;
+<i>6</i>&nbsp;import java.awt.geom.Rectangle2D;
+<i>7</i>&nbsp;import java.util.Random;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * An instance is a graphical representation of a Planet.
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;public class Planet extends Circle {
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    /* The diameter of an ordinary Planet. Earth and the target are larger. */
+<i>15</i>&nbsp;    private static final double BASE_DIAMETER = 16;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    /* The color of Earth. */
+<b class="nc"><i>18</i>&nbsp;    private static final Color EARTH_COLOR = new Color(40, 80, 140);</b>
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    /**
+<i>21</i>&nbsp;     * Constructor: a Circle with name name centered at ctr within
+<i>22</i>&nbsp;     * area area, drawn in bounds bounds with initial diameter d and
+<i>23</i>&nbsp;     * color c.
+<i>24</i>&nbsp;     */
+<i>25</i>&nbsp;    protected Planet(String name, Point ctr, Rectangle2D area,
+<i>26</i>&nbsp;                     Rectangle2D bounds, double d, Color c, FontMetrics fm) {
+<b class="nc"><i>27</i>&nbsp;        super(name, ctr, area, bounds, d, c, fm);</b>
+<i>28</i>&nbsp;    }
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /**
+<i>31</i>&nbsp;     * Return a Planet with name name centered at ctr within are
+<i>32</i>&nbsp;     * area, drawn within bounds bounds. Its name&#39;s dimensions are
+<i>33</i>&nbsp;     * determined via fm.
+<i>34</i>&nbsp;     */
+<i>35</i>&nbsp;    public static Planet make(String name, Point ctr, Rectangle2D area,
+<i>36</i>&nbsp;                              Rectangle2D bounds, FontMetrics fm, Random r) {
+<b class="nc"><i>37</i>&nbsp;        if (name.equals(Util.EARTH_NAME)) {</b>
+<b class="nc"><i>38</i>&nbsp;            return new Planet(name, ctr, area, bounds, BASE_DIAMETER * 2,</b>
+<i>39</i>&nbsp;                    EARTH_COLOR, fm);
+<b class="nc"><i>40</i>&nbsp;        } else if (name.equals(Util.CRASHED_PLANET_NAME)) {</b>
+<b class="nc"><i>41</i>&nbsp;            return new Planet(name, ctr, area, bounds, BASE_DIAMETER * 2,</b>
+<b class="nc"><i>42</i>&nbsp;                    randomColor(r), fm);</b>
+<i>43</i>&nbsp;        } else {
+<b class="nc"><i>44</i>&nbsp;            return new Planet(name, ctr, area, bounds, BASE_DIAMETER,</b>
+<b class="nc"><i>45</i>&nbsp;                    randomColor(r), fm);</b>
+<i>46</i>&nbsp;        }
+<i>47</i>&nbsp;    }
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    /**
+<i>50</i>&nbsp;     * Return a random color using Random r.
+<i>51</i>&nbsp;     */
+<i>52</i>&nbsp;    public static Color randomColor(Random r) {
+<b class="nc"><i>53</i>&nbsp;        return new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));</b>
+<i>54</i>&nbsp;    }
+<i>55</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-11-05 12:12</div>
+</div>
+</body>
+</html>

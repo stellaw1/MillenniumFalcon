@@ -1,0 +1,258 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Planet</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">cpen221.mp2.models</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Planet (cpen221.mp2.models)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Planet</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 17)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Planet$PlanetBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 13)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 30)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package cpen221.mp2.models;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import cpen221.mp2.graph.Vertex;
+<i>4</i>&nbsp;import cpen221.mp2.util.Util;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;/**
+<i>7</i>&nbsp; * A Planet (vertex) represents a Planet. Each Planet maintains:
+<i>8</i>&nbsp; * 1. a set of edges that exit it,
+<i>9</i>&nbsp; * 2. a modifier that affects the ship&#39;s speed upon visiting it,
+<i>10</i>&nbsp; * 3. the amount of spice on the planet and the rate at which they are lost.
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;public class Planet extends Vertex implements GameElement {
+<i>13</i>&nbsp;    int spice; // Current amount of spice on this planet; always &gt;= 0
+<i>14</i>&nbsp;    private int x, y; // Logical x, y coordinates of this Planet
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    /**
+<i>17</i>&nbsp;     * Constructor: a Planet named name with ID id with no edges
+<i>18</i>&nbsp;     * leaving it, the given x and y coordinates, speed modifier sm, initial
+<i>19</i>&nbsp;     * amount of spice g, and loss rate lr.
+<i>20</i>&nbsp;     */
+<i>21</i>&nbsp;    private Planet(int x, int y, String name, int id, int spice) {
+<b class="nc"><i>22</i>&nbsp;        super(id, name);</b>
+<b class="nc"><i>23</i>&nbsp;        this.x = x;</b>
+<b class="nc"><i>24</i>&nbsp;        this.y = y;</b>
+<b class="nc"><i>25</i>&nbsp;        this.spice = spice;</b>
+<i>26</i>&nbsp;    }
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    /**
+<i>29</i>&nbsp;     * Return the current amount of spice on this planet.
+<i>30</i>&nbsp;     *
+<i>31</i>&nbsp;     * @return the current amount of spice on this planet.
+<i>32</i>&nbsp;     */
+<i>33</i>&nbsp;    public int spice() {
+<b class="nc"><i>34</i>&nbsp;        return spice;</b>
+<i>35</i>&nbsp;    }
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    /**
+<i>38</i>&nbsp;     * Return the current number of spice on this planet and set
+<i>39</i>&nbsp;     * the number of spice to 0.&lt;br/&gt;&lt;br/&gt;
+<i>40</i>&nbsp;     * &lt;p&gt;&lt;strong&gt;modifies clause:&lt;/strong&gt; reduces the amount of spice on the planet.&lt;/p&gt;
+<i>41</i>&nbsp;     *
+<i>42</i>&nbsp;     * @return the amount of spice taken from this planet.
+<i>43</i>&nbsp;     */
+<i>44</i>&nbsp;    int takeSpice() {
+<b class="nc"><i>45</i>&nbsp;        int ret = spice;</b>
+<b class="nc"><i>46</i>&nbsp;        spice = 0;</b>
+<b class="nc"><i>47</i>&nbsp;        return ret;</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    /**
+<i>51</i>&nbsp;     * Return true iff ob and this point to the same Planet, or
+<i>52</i>&nbsp;     * if ob is a Planet with the same ID as this Planet.
+<i>53</i>&nbsp;     * Precondition: all Planets have unique IDs.
+<i>54</i>&nbsp;     */
+<i>55</i>&nbsp;    @Override
+<i>56</i>&nbsp;    public boolean equals(Object ob) {
+<b class="nc"><i>57</i>&nbsp;        if (ob == this) {</b>
+<b class="nc"><i>58</i>&nbsp;            return true;</b>
+<i>59</i>&nbsp;        }
+<b class="nc"><i>60</i>&nbsp;        if (ob == null || getClass() != ob.getClass()) {</b>
+<b class="nc"><i>61</i>&nbsp;            return false;</b>
+<i>62</i>&nbsp;        }
+<b class="nc"><i>63</i>&nbsp;        return super.equals(ob);</b>
+<i>64</i>&nbsp;    }
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    @Override
+<i>67</i>&nbsp;    public int hashCode() {
+<b class="nc"><i>68</i>&nbsp;        return super.hashCode();</b>
+<i>69</i>&nbsp;    }
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    /**
+<i>72</i>&nbsp;     * Return a String containing the name and coordinates of this Planet.
+<i>73</i>&nbsp;     *
+<i>74</i>&nbsp;     * @return a String containing the name and coordinates of this Planet.
+<i>75</i>&nbsp;     */
+<i>76</i>&nbsp;    @Override
+<i>77</i>&nbsp;    public String toString() {
+<b class="nc"><i>78</i>&nbsp;        return String.format(&quot;%s: (%s, %s)&quot;, super.name(), x, y);</b>
+<i>79</i>&nbsp;    }
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;    @Override
+<i>82</i>&nbsp;    public int x() {
+<b class="nc"><i>83</i>&nbsp;        return x;</b>
+<i>84</i>&nbsp;    }
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;    @Override
+<i>87</i>&nbsp;    public int y() {
+<b class="nc"><i>88</i>&nbsp;        return y;</b>
+<i>89</i>&nbsp;    }
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    /**
+<i>92</i>&nbsp;     * An instance builds a Planet with the appropriate parameters.
+<i>93</i>&nbsp;     * It will refuse to build if a parameter is unset.
+<i>94</i>&nbsp;     */
+<b class="nc"><i>95</i>&nbsp;    static class PlanetBuilder {</b>
+<i>96</i>&nbsp;        /* The parameters needed to build a Planet */
+<i>97</i>&nbsp;        private Integer x, y;
+<i>98</i>&nbsp;        private String name;
+<i>99</i>&nbsp;        private Integer id;
+<i>100</i>&nbsp;        private Integer spice;
+<i>101</i>&nbsp;
+<i>102</i>&nbsp;        /**
+<i>103</i>&nbsp;         * Set the position (x, y) of this Planet and return the node.
+<i>104</i>&nbsp;         */
+<i>105</i>&nbsp;        public PlanetBuilder pos(int x, int y) {
+<b class="nc"><i>106</i>&nbsp;            this.x = x;</b>
+<b class="nc"><i>107</i>&nbsp;            this.y = y;</b>
+<b class="nc"><i>108</i>&nbsp;            return this;</b>
+<i>109</i>&nbsp;        }
+<i>110</i>&nbsp;
+<i>111</i>&nbsp;        /**
+<i>112</i>&nbsp;         * Set the name of this Planet to name and return the node.
+<i>113</i>&nbsp;         */
+<i>114</i>&nbsp;        public PlanetBuilder name(String name) {
+<b class="nc"><i>115</i>&nbsp;            this.name = name;</b>
+<b class="nc"><i>116</i>&nbsp;            return this;</b>
+<i>117</i>&nbsp;        }
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;        /**
+<i>120</i>&nbsp;         * Set the id to id, a unique identifier for this Planet and
+<i>121</i>&nbsp;         * return the node.
+<i>122</i>&nbsp;         */
+<i>123</i>&nbsp;        public PlanetBuilder id(int id) {
+<b class="nc"><i>124</i>&nbsp;            this.id = id;</b>
+<b class="nc"><i>125</i>&nbsp;            return this;</b>
+<i>126</i>&nbsp;        }
+<i>127</i>&nbsp;
+<i>128</i>&nbsp;        /**
+<i>129</i>&nbsp;         * Set the initial number of spice on this Planet to &#39;spice&#39; and
+<i>130</i>&nbsp;         * return this Planet.
+<i>131</i>&nbsp;         */
+<i>132</i>&nbsp;        public PlanetBuilder spice(int spice) {
+<b class="nc"><i>133</i>&nbsp;            this.spice = spice;</b>
+<b class="nc"><i>134</i>&nbsp;            return this;</b>
+<i>135</i>&nbsp;        }
+<i>136</i>&nbsp;
+<i>137</i>&nbsp;        /**
+<i>138</i>&nbsp;         * Build this Planet.
+<i>139</i>&nbsp;         * Precondition: all appropriate parameters have been set.
+<i>140</i>&nbsp;         */
+<i>141</i>&nbsp;        public Planet build() {
+<b class="nc"><i>142</i>&nbsp;            if (Util.anyNull(x, y, name, id, spice)) {</b>
+<b class="nc"><i>143</i>&nbsp;                throw new IllegalStateException(&quot;unset PlanetBuilder params&quot;);</b>
+<i>144</i>&nbsp;            }
+<i>145</i>&nbsp;
+<b class="nc"><i>146</i>&nbsp;            return new Planet(x, y, name, id, spice);</b>
+<i>147</i>&nbsp;        }
+<i>148</i>&nbsp;    }
+<i>149</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-11-05 12:12</div>
+</div>
+</body>
+</html>

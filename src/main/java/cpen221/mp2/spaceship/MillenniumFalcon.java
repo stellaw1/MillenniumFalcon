@@ -75,7 +75,6 @@ public class MillenniumFalcon implements Spaceship {
     @Override
     public void gather(GathererStage state) {
         final long SECONDS15 = 15000000000L;
-
         Graph<Planet, Link> allPlanetsGraph = (Graph) state.planetGraph();
         Set<Planet> allPlanets = allPlanetsGraph.allVertices();
 
@@ -101,8 +100,13 @@ public class MillenniumFalcon implements Spaceship {
             }
         }
 
-        int longestPathLength = Math.max(Math.max(allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, topRightPlanet)),
-                allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, bottomLeftPlanet))), allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, bottomRightPlanet)));
+
+        //Define most amount of fuel needed to be the distance from the farthest corner nodes
+        //plus 1/5 of the distance from top left to top right to give a little lee-way
+        int longestPathLength = (int)(0.2*allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, topRightPlanet))) +
+                Math.max(Math.max(allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, topRightPlanet)),
+                        allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, bottomLeftPlanet))),
+                        allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, bottomRightPlanet)));
 
         ArrayList<Planet> spiciestPlanets = new ArrayList<>();
         spiciestPlanets.addAll(allPlanets);
@@ -113,6 +117,11 @@ public class MillenniumFalcon implements Spaceship {
                 return b.spice() - a.spice();
             }
         });
+        int totalSpiceInUniverse = 0;
+        for (Planet a : allPlanets){
+            totalSpiceInUniverse += a.spice();
+        }
+        System.out.println("max spice = " + totalSpiceInUniverse);
 
         HashSet<Planet> visitedPlanets = new HashSet<>();
 

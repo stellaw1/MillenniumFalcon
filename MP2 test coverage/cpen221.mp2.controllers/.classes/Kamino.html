@@ -1,0 +1,400 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Kamino</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">cpen221.mp2.controllers</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Kamino (cpen221.mp2.controllers)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Kamino</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 91)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Kamino$ModelThread</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 9)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 100)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package cpen221.mp2.controllers;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import cpen221.mp2.models.Controllable.AbortException;
+<i>4</i>&nbsp;import cpen221.mp2.models.Controllable.SolutionFailedException;
+<i>5</i>&nbsp;import cpen221.mp2.models.GameModel;
+<i>6</i>&nbsp;import cpen221.mp2.models.Universe;
+<i>7</i>&nbsp;import cpen221.mp2.spaceship.MillenniumFalcon;
+<i>8</i>&nbsp;import cpen221.mp2.views.*;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.util.Random;
+<i>11</i>&nbsp;import java.util.function.Supplier;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;import static cpen221.mp2.models.Model.Stage.GATHER;
+<i>14</i>&nbsp;import static cpen221.mp2.models.Model.Stage.HUNT;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;/**
+<i>17</i>&nbsp; * An instance runs the game, linking the state to the user interface.
+<i>18</i>&nbsp; */
+<i>19</i>&nbsp;public class Kamino implements Controller {
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    /* Tunable map generation parameters. */
+<i>22</i>&nbsp;    public static final int MIN_NODES = 5;
+<i>23</i>&nbsp;    public static final int MAX_NODES = 750;
+<i>24</i>&nbsp;    public static final int MIN_SPICE = 0;
+<i>25</i>&nbsp;    public static final int MAX_SPICE = 5000;
+<i>26</i>&nbsp;    public static final int WIDTH = 4096;
+<i>27</i>&nbsp;    public static final int HEIGHT = 4096;
+<b class="nc"><i>28</i>&nbsp;    private static final Random RNG = new Random(); // used for random seed generation.</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /* A Spaceship supplier used to get new Spaceships (e.g. for restarting). */
+<i>31</i>&nbsp;    private static Supplier&lt;Spaceship&gt; ships;
+<i>32</i>&nbsp;    protected long seed; // The seed used to generate this game.
+<i>33</i>&nbsp;    protected Spaceship spaceship; // The solution implementing this game.
+<i>34</i>&nbsp;    protected boolean started; // True iff this game has started.
+<i>35</i>&nbsp;    protected boolean failed; // True iff this game&#39;s solution failed.
+<i>36</i>&nbsp;    protected GameModel model; // The controllable model for this game.
+<i>37</i>&nbsp;    protected View view; // The view for this game.
+<i>38</i>&nbsp;    /* Separate thread used to prevent the model from blocking the view */
+<i>39</i>&nbsp;    protected ModelThread thread;
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    /**
+<i>42</i>&nbsp;     * Constructor: a game with seed s, spaceship sp, and View v.
+<i>43</i>&nbsp;     */
+<b class="nc"><i>44</i>&nbsp;    public Kamino(long seed, Spaceship spaceship, View view) {</b>
+<b class="nc"><i>45</i>&nbsp;        this.view = view;</b>
+<b class="nc"><i>46</i>&nbsp;        ships = () -&gt; {</b>
+<i>47</i>&nbsp;            try {
+<b class="nc"><i>48</i>&nbsp;                return spaceship.getClass().newInstance();</b>
+<i>49</i>&nbsp;            }
+<b class="nc"><i>50</i>&nbsp;            catch (Exception e) {</b>
+<b class="nc"><i>51</i>&nbsp;                System.err.println(&quot;fatal error: failed to create new Spaceship&quot;);</b>
+<b class="nc"><i>52</i>&nbsp;                System.exit(1);</b>
+<i>53</i>&nbsp;            }
+<b class="nc"><i>54</i>&nbsp;            return null;</b>
+<i>55</i>&nbsp;        };
+<i>56</i>&nbsp;
+<b class="nc"><i>57</i>&nbsp;        init(seed, spaceship);</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    /**
+<i>61</i>&nbsp;     * Run Kamino. Without any options, this defaults to an instance
+<i>62</i>&nbsp;     * with a random seed using a GUI view.
+<i>63</i>&nbsp;     * &lt;p&gt;
+<i>64</i>&nbsp;     * -s, --seed=-8876742922144960503  Run this game using the seed SEED
+<i>65</i>&nbsp;     * -g, --gui        Use the GUI (graphical user interface) view
+<i>66</i>&nbsp;     * -c, --cli        Use the CLI (command-line interface) view
+<i>67</i>&nbsp;     * -b, --benchmark  Use a benchmark view, which will give statistics
+<i>68</i>&nbsp;     * of your solution when run on multiple seeds
+<i>69</i>&nbsp;     * -q, --quiet      Use a quiet view, which outputs nothing.
+<i>70</i>&nbsp;     */
+<i>71</i>&nbsp;    public static void main(String[] argv) {
+<i>72</i>&nbsp;        // parse arguments
+<b class="nc"><i>73</i>&nbsp;        View view = null;</b>
+<b class="nc"><i>74</i>&nbsp;        Long seed = null;</b>
+<b class="nc"><i>75</i>&nbsp;        for (int i = 0; i &lt; argv.length; ++i) {</b>
+<i>76</i>&nbsp;            try {
+<b class="nc"><i>77</i>&nbsp;                if (argv[i].equals(&quot;-g&quot;) || argv[i].equals(&quot;--gui&quot;)) {</b>
+<b class="nc"><i>78</i>&nbsp;                    if (view != null) {</b>
+<b class="nc"><i>79</i>&nbsp;                        System.err.println(</b>
+<i>80</i>&nbsp;                                &quot;Error: cannot specify more than &quot; + &quot;one view option&quot;);
+<i>81</i>&nbsp;                        return;
+<i>82</i>&nbsp;                    } else {
+<b class="nc"><i>83</i>&nbsp;                        view = new GUIView();</b>
+<i>84</i>&nbsp;                    }
+<b class="nc"><i>85</i>&nbsp;                } else if (argv[i].equals(&quot;-c&quot;) || argv[i].equals(&quot;--cli&quot;)) {</b>
+<b class="nc"><i>86</i>&nbsp;                    if (view != null) {</b>
+<b class="nc"><i>87</i>&nbsp;                        System.err.println(</b>
+<i>88</i>&nbsp;                                &quot;Error: cannot specify more than &quot; + &quot;one view option&quot;);
+<i>89</i>&nbsp;                        return;
+<i>90</i>&nbsp;                    } else {
+<b class="nc"><i>91</i>&nbsp;                        view = new CLIView();</b>
+<i>92</i>&nbsp;                    }
+<b class="nc"><i>93</i>&nbsp;                } else if (argv[i].equals(&quot;-q&quot;) || argv[i].equals(&quot;--quiet&quot;)) {</b>
+<b class="nc"><i>94</i>&nbsp;                    if (view != null) {</b>
+<b class="nc"><i>95</i>&nbsp;                        System.err.println(</b>
+<i>96</i>&nbsp;                                &quot;Error: cannot specify more than &quot; + &quot;one view option&quot;);
+<i>97</i>&nbsp;                        return;
+<i>98</i>&nbsp;                    } else {
+<b class="nc"><i>99</i>&nbsp;                        view = new QuietView();</b>
+<i>100</i>&nbsp;                    }
+<b class="nc"><i>101</i>&nbsp;                } else if (argv[i].equals(&quot;-b&quot;) || argv[i].equals(&quot;--benchmark&quot;)) {</b>
+<b class="nc"><i>102</i>&nbsp;                    if (view != null) {</b>
+<b class="nc"><i>103</i>&nbsp;                        System.err.println(</b>
+<i>104</i>&nbsp;                                &quot;Error: cannot specify more than &quot; + &quot;one view option&quot;);
+<i>105</i>&nbsp;                        return;
+<i>106</i>&nbsp;                    } else {
+<b class="nc"><i>107</i>&nbsp;                        view = new BenchmarkView();</b>
+<i>108</i>&nbsp;                    }
+<b class="nc"><i>109</i>&nbsp;                } else if (argv[i].length() &gt; 7</b>
+<b class="nc"><i>110</i>&nbsp;                        &amp;&amp; argv[i].substring(0, 7).equals(&quot;--seed=&quot;)) {</b>
+<b class="nc"><i>111</i>&nbsp;                    seed = Long.parseLong(argv[i].substring(7));</b>
+<b class="nc"><i>112</i>&nbsp;                } else if (argv[i].equals(&quot;-s&quot;)) {</b>
+<b class="nc"><i>113</i>&nbsp;                    if (i + 1 &lt; argv.length) {</b>
+<b class="nc"><i>114</i>&nbsp;                        ++i;</b>
+<b class="nc"><i>115</i>&nbsp;                        seed = Long.parseLong(argv[i]);</b>
+<i>116</i>&nbsp;                    } else {
+<b class="nc"><i>117</i>&nbsp;                        System.err.println(&quot;Error: no seed specified.&quot;);</b>
+<i>118</i>&nbsp;                        return;
+<i>119</i>&nbsp;                    }
+<i>120</i>&nbsp;                } else {
+<b class="nc"><i>121</i>&nbsp;                    System.err.println(&quot;Error: invalid argument \&quot;&quot; + argv[i] + &#39;&quot;&#39;);</b>
+<i>122</i>&nbsp;                    return;
+<i>123</i>&nbsp;                }
+<i>124</i>&nbsp;            }
+<b class="nc"><i>125</i>&nbsp;            catch (NumberFormatException e) {</b>
+<b class="nc"><i>126</i>&nbsp;                System.err.println(&quot;Invalid seed \&quot;&quot; + argv[i] + &#39;&quot;&#39;);</b>
+<i>127</i>&nbsp;                return;
+<b class="nc"><i>128</i>&nbsp;            }</b>
+<i>129</i>&nbsp;        }
+<b class="nc"><i>130</i>&nbsp;        if (seed == null) {</b>
+<b class="nc"><i>131</i>&nbsp;            seed = RNG.nextLong(); // avoid burning RNG; only generate if needed</b>
+<i>132</i>&nbsp;        }
+<i>133</i>&nbsp;
+<i>134</i>&nbsp;        // begin the game with the appropriate parameters
+<b class="nc"><i>135</i>&nbsp;        if (view == null) {</b>
+<b class="nc"><i>136</i>&nbsp;            view = new GUIView();</b>
+<i>137</i>&nbsp;        }
+<b class="nc"><i>138</i>&nbsp;        new Kamino(seed, new MillenniumFalcon(), view);</b>
+<i>139</i>&nbsp;    }
+<i>140</i>&nbsp;
+<i>141</i>&nbsp;    /**
+<i>142</i>&nbsp;     * Intialize the game with seed s and spaceship sp. If this game has already
+<i>143</i>&nbsp;     * been initialized, this overwrites the previous initialization.
+<i>144</i>&nbsp;     */
+<i>145</i>&nbsp;    protected void init(long seed, Spaceship ship) {
+<i>146</i>&nbsp;        // stop the old thread, if it exists
+<b class="nc"><i>147</i>&nbsp;        if (thread != null) {</b>
+<b class="nc"><i>148</i>&nbsp;            thread.kill();</b>
+<i>149</i>&nbsp;        }
+<i>150</i>&nbsp;
+<b class="nc"><i>151</i>&nbsp;        started = false;</b>
+<b class="nc"><i>152</i>&nbsp;        failed = false;</b>
+<i>153</i>&nbsp;
+<b class="nc"><i>154</i>&nbsp;        this.seed = seed;</b>
+<b class="nc"><i>155</i>&nbsp;        spaceship = ship;</b>
+<b class="nc"><i>156</i>&nbsp;        Universe u = new Universe.UniverseBuilder().size(WIDTH, HEIGHT).seed(seed)</b>
+<b class="nc"><i>157</i>&nbsp;                .planetBounds(MIN_NODES, MAX_NODES).spiceBounds(MIN_SPICE, MAX_SPICE).build();</b>
+<b class="nc"><i>158</i>&nbsp;        model = new GameModel(u);</b>
+<b class="nc"><i>159</i>&nbsp;        thread = new ModelThread();</b>
+<b class="nc"><i>160</i>&nbsp;        view.init(this, model);</b>
+<i>161</i>&nbsp;    }
+<i>162</i>&nbsp;
+<i>163</i>&nbsp;    @Override
+<i>164</i>&nbsp;    public void newGame(String seed) {
+<b class="nc"><i>165</i>&nbsp;        if (seed == null) {</b>
+<i>166</i>&nbsp;            return;
+<i>167</i>&nbsp;        }
+<i>168</i>&nbsp;        try {
+<b class="nc"><i>169</i>&nbsp;            init(Long.valueOf(seed), ships.get());</b>
+<i>170</i>&nbsp;        }
+<b class="nc"><i>171</i>&nbsp;        catch (NumberFormatException ex) {</b>
+<b class="nc"><i>172</i>&nbsp;            init(RNG.nextLong(), ships.get());</b>
+<b class="nc"><i>173</i>&nbsp;        }</b>
+<i>174</i>&nbsp;    }
+<i>175</i>&nbsp;
+<i>176</i>&nbsp;    @Override
+<i>177</i>&nbsp;    public void newGame(long seed) {
+<b class="nc"><i>178</i>&nbsp;        init(seed, ships.get());</b>
+<i>179</i>&nbsp;    }
+<i>180</i>&nbsp;
+<i>181</i>&nbsp;    @Override
+<i>182</i>&nbsp;    public void reset() {
+<b class="nc"><i>183</i>&nbsp;        init(seed, ships.get());</b>
+<i>184</i>&nbsp;    }
+<i>185</i>&nbsp;
+<i>186</i>&nbsp;    @Override
+<i>187</i>&nbsp;    public void start() {
+<b class="nc"><i>188</i>&nbsp;        if (started) {</b>
+<b class="nc"><i>189</i>&nbsp;            view.errprintln(&quot;Game has already started&quot;);</b>
+<i>190</i>&nbsp;            return;
+<i>191</i>&nbsp;        }
+<b class="nc"><i>192</i>&nbsp;        started = true;</b>
+<b class="nc"><i>193</i>&nbsp;        thread.start();</b>
+<i>194</i>&nbsp;    }
+<i>195</i>&nbsp;
+<i>196</i>&nbsp;    /**
+<i>197</i>&nbsp;     * Take the appropriate actions when a solution fails.
+<i>198</i>&nbsp;     */
+<i>199</i>&nbsp;    private void fail(SolutionFailedException e) {
+<b class="nc"><i>200</i>&nbsp;        failed = true;</b>
+<b class="nc"><i>201</i>&nbsp;        view.endStage(model.phase());</b>
+<b class="nc"><i>202</i>&nbsp;        view.errprintln(&quot;Solution failed with reason: &quot; + e.getMessage());</b>
+<b class="nc"><i>203</i>&nbsp;        view.endGame(model.score());</b>
+<i>204</i>&nbsp;    }
+<i>205</i>&nbsp;
+<i>206</i>&nbsp;    @Override
+<i>207</i>&nbsp;    public synchronized void update() {
+<i>208</i>&nbsp;        try {
+<b class="nc"><i>209</i>&nbsp;            model.update(TICKTIME);</b>
+<i>210</i>&nbsp;        }
+<b class="nc"><i>211</i>&nbsp;        catch (SolutionFailedException e) {</b>
+<b class="nc"><i>212</i>&nbsp;            if (!failed) {</b>
+<b class="nc"><i>213</i>&nbsp;                fail(e);</b>
+<i>214</i>&nbsp;            }
+<b class="nc"><i>215</i>&nbsp;        }</b>
+<i>216</i>&nbsp;    }
+<i>217</i>&nbsp;
+<i>218</i>&nbsp;    /**
+<i>219</i>&nbsp;     * Run ship&#39;s hunt method.
+<i>220</i>&nbsp;     * Throw a SolutionFailedException if the hunt fails.
+<i>221</i>&nbsp;     */
+<i>222</i>&nbsp;    protected void hunt() throws SolutionFailedException {
+<b class="nc"><i>223</i>&nbsp;        view.beginStage(HUNT);</b>
+<b class="nc"><i>224</i>&nbsp;        spaceship.hunt(model.beginHuntStage());</b>
+<b class="nc"><i>225</i>&nbsp;        boolean success = model.endHuntStage();</b>
+<b class="nc"><i>226</i>&nbsp;        view.endStage(HUNT);</b>
+<b class="nc"><i>227</i>&nbsp;        if (success) {</b>
+<i>228</i>&nbsp;            return;
+<i>229</i>&nbsp;        }
+<i>230</i>&nbsp;
+<b class="nc"><i>231</i>&nbsp;        throw new SolutionFailedException(</b>
+<i>232</i>&nbsp;                &quot;Your solution to search() returned at the wrong location.&quot;);
+<i>233</i>&nbsp;    }
+<i>234</i>&nbsp;
+<i>235</i>&nbsp;    /**
+<i>236</i>&nbsp;     * Run ship&#39;s gather method.
+<i>237</i>&nbsp;     * Throw a SolutionFailedException if the gather stage fails.
+<i>238</i>&nbsp;     */
+<i>239</i>&nbsp;    protected void gather() throws SolutionFailedException {
+<b class="nc"><i>240</i>&nbsp;        view.beginStage(GATHER);</b>
+<b class="nc"><i>241</i>&nbsp;        spaceship.gather(model.beginGatherStage());</b>
+<b class="nc"><i>242</i>&nbsp;        boolean success = model.endGatherStage();</b>
+<b class="nc"><i>243</i>&nbsp;        view.endStage(GATHER);</b>
+<b class="nc"><i>244</i>&nbsp;        if (success) {</b>
+<i>245</i>&nbsp;            return;
+<i>246</i>&nbsp;        }
+<i>247</i>&nbsp;
+<b class="nc"><i>248</i>&nbsp;        throw new SolutionFailedException(</b>
+<i>249</i>&nbsp;                &quot;Your solution to rescue() returned at the wrong location.&quot;);
+<i>250</i>&nbsp;    }
+<i>251</i>&nbsp;
+<i>252</i>&nbsp;    @Override
+<i>253</i>&nbsp;    public boolean huntSucceeded() {
+<b class="nc"><i>254</i>&nbsp;        return model.huntSucceeded();</b>
+<i>255</i>&nbsp;    }
+<i>256</i>&nbsp;
+<i>257</i>&nbsp;    @Override
+<i>258</i>&nbsp;    public boolean gatherSucceeded() {
+<b class="nc"><i>259</i>&nbsp;        return model.gatherSucceeded();</b>
+<i>260</i>&nbsp;    }
+<i>261</i>&nbsp;
+<i>262</i>&nbsp;    /**
+<i>263</i>&nbsp;     * An instance runs a model in a separate thread.
+<i>264</i>&nbsp;     * It can be killed by calling kill().
+<i>265</i>&nbsp;     */
+<b class="nc"><i>266</i>&nbsp;    protected class ModelThread extends Thread {</b>
+<i>267</i>&nbsp;        /**
+<i>268</i>&nbsp;         * Run through the game until it finishes, fails, or is aborted.
+<i>269</i>&nbsp;         */
+<i>270</i>&nbsp;        @Override
+<i>271</i>&nbsp;        public void run() {
+<i>272</i>&nbsp;            try {
+<b class="nc"><i>273</i>&nbsp;                hunt();</b>
+<b class="nc"><i>274</i>&nbsp;                gather();</b>
+<b class="nc"><i>275</i>&nbsp;                view.endGame(model.score());</b>
+<i>276</i>&nbsp;            }
+<b class="nc"><i>277</i>&nbsp;            catch (SolutionFailedException e) {</b>
+<b class="nc"><i>278</i>&nbsp;                fail(e);</b>
+<i>279</i>&nbsp;            }
+<b class="nc"><i>280</i>&nbsp;            catch (AbortException e) {</b>
+<b class="nc"><i>281</i>&nbsp;            }</b>
+<i>282</i>&nbsp;        }
+<i>283</i>&nbsp;
+<i>284</i>&nbsp;        /**
+<i>285</i>&nbsp;         * Kill this model thread by aborting the underlying model.
+<i>286</i>&nbsp;         */
+<i>287</i>&nbsp;        public void kill() {
+<b class="nc"><i>288</i>&nbsp;            model.abort();</b>
+<i>289</i>&nbsp;        }
+<i>290</i>&nbsp;    }
+<i>291</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-11-05 12:12</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,165 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: IGraph</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">cpen221.mp2.graph</a> ]
+</div>
+
+<h1>Coverage Summary for Class: IGraph (cpen221.mp2.graph)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">IGraph</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package cpen221.mp2.graph;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.Map;
+<i>4</i>&nbsp;import java.util.Set;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;public interface IGraph&lt;V extends Vertex, E extends Edge&lt;V&gt;&gt; {
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;    /**
+<i>9</i>&nbsp;     * Add a vertex to the graph
+<i>10</i>&nbsp;     *
+<i>11</i>&nbsp;     * @param v vertex to add
+<i>12</i>&nbsp;     * @return true if the vertex was added successfully and false otherwise
+<i>13</i>&nbsp;     */
+<i>14</i>&nbsp;    public boolean addVertex(V v);
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    /**
+<i>17</i>&nbsp;     * Check if a vertex is part of the graph
+<i>18</i>&nbsp;     *
+<i>19</i>&nbsp;     * @param v vertex to check in the graph
+<i>20</i>&nbsp;     * @return true of v is part of the graph and false otherwise
+<i>21</i>&nbsp;     */
+<i>22</i>&nbsp;    public boolean vertex(V v);
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    /**
+<i>25</i>&nbsp;     * Add an edge of the graph
+<i>26</i>&nbsp;     *
+<i>27</i>&nbsp;     * @param e the edge to add to the graph
+<i>28</i>&nbsp;     * @return true if the edge was successfully added and false otherwise
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;    public boolean addEdge(E e);
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    /**
+<i>33</i>&nbsp;     * Check if an edge is part of the graph
+<i>34</i>&nbsp;     *
+<i>35</i>&nbsp;     * @param e the edge to check in the graph
+<i>36</i>&nbsp;     * @return true if e is an edge in the graoh and false otherwise
+<i>37</i>&nbsp;     */
+<i>38</i>&nbsp;    public boolean edge(E e);
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    /**
+<i>41</i>&nbsp;     * Check if v1-v2 is an edge in the graph
+<i>42</i>&nbsp;     *
+<i>43</i>&nbsp;     * @param v1 the first vertex of the edge
+<i>44</i>&nbsp;     * @param v2 the second vertex of the edge
+<i>45</i>&nbsp;     * @return true of the v1-v2 edge is part of the graph and false otherwise
+<i>46</i>&nbsp;     */
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    public boolean edge(V v1, V v2);
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    /**
+<i>51</i>&nbsp;     * Determine the length on an edge in the graph
+<i>52</i>&nbsp;     *
+<i>53</i>&nbsp;     * @param v1 the first vertex of the edge
+<i>54</i>&nbsp;     * @param v2 the second vertex of the edge
+<i>55</i>&nbsp;     * @return the length of the v1-v2 edge if this edge is part of the graph
+<i>56</i>&nbsp;     */
+<i>57</i>&nbsp;    public int edgeLength(V v1, V v2);
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    /**
+<i>60</i>&nbsp;     * Obtain the sum of the lengths of all edges in the graph
+<i>61</i>&nbsp;     *
+<i>62</i>&nbsp;     * @return the sum of the lengths of all edges in the graph
+<i>63</i>&nbsp;     */
+<i>64</i>&nbsp;    public int edgeLengthSum();
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    /**
+<i>67</i>&nbsp;     * Remove an edge from the graph
+<i>68</i>&nbsp;     *
+<i>69</i>&nbsp;     * @param e the edge to remove
+<i>70</i>&nbsp;     * @return true if e was successfully removed and false otherwise
+<i>71</i>&nbsp;     */
+<i>72</i>&nbsp;    public boolean remove(E e);
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;    /**
+<i>75</i>&nbsp;     * Remove a vertex from the graph
+<i>76</i>&nbsp;     *
+<i>77</i>&nbsp;     * @param v the vertex to remove
+<i>78</i>&nbsp;     * @return true if v was successfully removed and false otherwise
+<i>79</i>&nbsp;     */
+<i>80</i>&nbsp;    public boolean remove(V v);
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;    /**
+<i>84</i>&nbsp;     * Obtain a set of all vertices in the graph.
+<i>85</i>&nbsp;     * Access to this set **should not** permit graph mutations.
+<i>86</i>&nbsp;     *
+<i>87</i>&nbsp;     * @return a set of all vertices in the graph
+<i>88</i>&nbsp;     */
+<i>89</i>&nbsp;    public Set&lt;V&gt; allVertices();
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    /**
+<i>92</i>&nbsp;     * Obtain a set of all vertices incident on v.
+<i>93</i>&nbsp;     * Access to this set **should not** permit graph mutations.
+<i>94</i>&nbsp;     *
+<i>95</i>&nbsp;     * @param v the vertex of interest
+<i>96</i>&nbsp;     * @return all edges incident on v
+<i>97</i>&nbsp;     */
+<i>98</i>&nbsp;    public Set&lt;E&gt; allEdges(V v);
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;    /**
+<i>101</i>&nbsp;     * Obtain a set of all edges in the graph.
+<i>102</i>&nbsp;     * Access to this set **should not** permit graph mutations.
+<i>103</i>&nbsp;     *
+<i>104</i>&nbsp;     * @return all edges in the graph
+<i>105</i>&nbsp;     */
+<i>106</i>&nbsp;    public Set&lt;E&gt; allEdges();
+<i>107</i>&nbsp;
+<i>108</i>&nbsp;    /**
+<i>109</i>&nbsp;     * Obtain all the neighbours of vertex v.
+<i>110</i>&nbsp;     * Access to this map **should not** permit graph mutations.
+<i>111</i>&nbsp;     *
+<i>112</i>&nbsp;     * @param v is the vertex whose neighbourhood we want.
+<i>113</i>&nbsp;     * @return a map containing each vertex w that neighbors v and the edge between v and w.
+<i>114</i>&nbsp;     */
+<i>115</i>&nbsp;    Map&lt;V, E&gt; getNeighbours(V v);
+<i>116</i>&nbsp;
+<i>117</i>&nbsp;
+<i>118</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-11-05 12:12</div>
+</div>
+</body>
+</html>

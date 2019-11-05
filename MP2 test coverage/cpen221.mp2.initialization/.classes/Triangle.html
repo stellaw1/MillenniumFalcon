@@ -1,0 +1,689 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Triangle</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">cpen221.mp2.initialization</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Triangle (cpen221.mp2.initialization)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Triangle</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 127)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Triangle$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Triangle$Quad</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 37)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Triangle$SharedEdge</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 25)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 190)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package cpen221.mp2.initialization;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.awt.*;
+<i>4</i>&nbsp;import java.util.LinkedList;
+<i>5</i>&nbsp;import java.util.Queue;
+<i>6</i>&nbsp;import java.util.Set;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;/**
+<i>9</i>&nbsp; * Helper class used for Delaunay Triangulation. Uses Barycentric coordinates
+<i>10</i>&nbsp; * to determine if a point is inside a given triangle and then tracks any
+<i>11</i>&nbsp; * sub-triangles created inside, as well as Triangles sharing an edge with
+<i>12</i>&nbsp; * this Triangle.
+<i>13</i>&nbsp; * &lt;p&gt;
+<i>14</i>&nbsp; * An instance maintains the three vertices of a triangle and recursively
+<i>15</i>&nbsp; * tracks one layer of sub-triangles within it.
+<i>16</i>&nbsp; */
+<i>17</i>&nbsp;public class Triangle {
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    /* The three vertices defining this Triangle, in no particular order. */
+<b class="nc"><i>20</i>&nbsp;    private Point[] vs = new Point[3];</b>
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    /* The three SharedEdges of this Triangle, in no particular order. Any
+<i>23</i>&nbsp;     * element can be null if the edge is unshared. */
+<b class="nc"><i>24</i>&nbsp;    private SharedEdge[] es = new SharedEdge[3];</b>
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /* The HistoryEvent resulting in the next step of this triangulation.
+<i>27</i>&nbsp;     * Null if no events have occurred for this Triangle. */
+<i>28</i>&nbsp;    private HistoryEvent event;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /* Determinant from Barycentric coordinate conversion used to find if a
+<i>31</i>&nbsp;     * point is inside of this Triangle */
+<i>32</i>&nbsp;    private double detT;
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    /**
+<i>35</i>&nbsp;     * Constructor: a Triangle with three vertices p1, p2, and p3, no
+<i>36</i>&nbsp;     * sub-Triangles, and no shared-edge Triangles.
+<i>37</i>&nbsp;     */
+<b class="nc"><i>38</i>&nbsp;    public Triangle(Point p1, Point p2, Point p3) {</b>
+<b class="nc"><i>39</i>&nbsp;        vs[0] = p1;</b>
+<b class="nc"><i>40</i>&nbsp;        vs[1] = p2;</b>
+<b class="nc"><i>41</i>&nbsp;        vs[2] = p3;</b>
+<b class="nc"><i>42</i>&nbsp;        detT = (vs[1].y - vs[2].y) * (vs[0].x - vs[2].x)</b>
+<i>43</i>&nbsp;                + (vs[2].x - vs[1].x) * (vs[0].y - vs[2].y);
+<i>44</i>&nbsp;    }
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    /**
+<i>47</i>&nbsp;     * If line is null, return. If line[0] is a null SharedEdge, create
+<i>48</i>&nbsp;     * two new SharedEdges containing sub and null. Otherwise, line
+<i>49</i>&nbsp;     * contains two SharedEdges; update them using sub. Return line.
+<i>50</i>&nbsp;     * &lt;p&gt;
+<i>51</i>&nbsp;     * Precondition: line is null or line.length = 2. sub.length = 2. The first
+<i>52</i>&nbsp;     * vertex of each sub Triangle MUST be an endpoint of the colinear edge. The
+<i>53</i>&nbsp;     * second vertex of each subTriangle MUST be the Point on the edge.
+<i>54</i>&nbsp;     */
+<i>55</i>&nbsp;    private static SharedEdge[] setColinearSharedEdges(SharedEdge[] line,
+<i>56</i>&nbsp;                                                       Triangle[] sub) {
+<b class="nc"><i>57</i>&nbsp;        if (line == null) { // outer edge case</b>
+<b class="nc"><i>58</i>&nbsp;            return null;</b>
+<b class="nc"><i>59</i>&nbsp;        } else if (line[0] == null) { // inner edge, first Triangle</b>
+<b class="nc"><i>60</i>&nbsp;            for (int i = 0; i != 2; ++i) {</b>
+<b class="nc"><i>61</i>&nbsp;                sub[i].es[2] = new SharedEdge(sub[i].vs[0], sub[i].vs[1], null,</b>
+<i>62</i>&nbsp;                        sub[i]); // use null as a temporary dummy
+<b class="nc"><i>63</i>&nbsp;                line[i] = sub[i].es[2];</b>
+<i>64</i>&nbsp;            }
+<i>65</i>&nbsp;        } else { // inner edge, second Triangle
+<b class="nc"><i>66</i>&nbsp;            for (SharedEdge e : line) {</b>
+<b class="nc"><i>67</i>&nbsp;                if (e.contains(sub[0].vs[0])) {</b>
+<b class="nc"><i>68</i>&nbsp;                    sub[0].es[2] = e;</b>
+<b class="nc"><i>69</i>&nbsp;                    e.update(null, sub[0]); // replace dummy null</b>
+<i>70</i>&nbsp;                } else {
+<b class="nc"><i>71</i>&nbsp;                    sub[1].es[2] = e;</b>
+<b class="nc"><i>72</i>&nbsp;                    e.update(null, sub[1]); // replace dummy null</b>
+<i>73</i>&nbsp;                }
+<i>74</i>&nbsp;            }
+<i>75</i>&nbsp;        }
+<b class="nc"><i>76</i>&nbsp;        return line;</b>
+<i>77</i>&nbsp;    }
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    /**
+<i>80</i>&nbsp;     * If this Triangle contains p, adds p to this Triangle, splitting the
+<i>81</i>&nbsp;     * appropriate innermost Triangle, adjusting the triangulation set ts as
+<i>82</i>&nbsp;     * needed, and maintaining the Delaunay condition, then returns true.
+<i>83</i>&nbsp;     * Otherwise, returns false.
+<i>84</i>&nbsp;     * &lt;p&gt;
+<i>85</i>&nbsp;     * N.B. This method allows Points to be put on edges, as well as 4 points to
+<i>86</i>&nbsp;     * be on an innermost circumcircle; if either of these occur, the resulting
+<i>87</i>&nbsp;     * Delaunay Triangulation will not be unique.
+<i>88</i>&nbsp;     * &lt;p&gt;
+<i>89</i>&nbsp;     * Precondition: p&#39;s coordinates are unique. outer is the outermost non-null
+<i>90</i>&nbsp;     * Triangle of a triangulation.
+<i>91</i>&nbsp;     */
+<i>92</i>&nbsp;    public boolean addPoint(Point p, Set&lt;Triangle&gt; ts) {
+<b class="nc"><i>93</i>&nbsp;        PointLocation pLoc = getInnermost(p);</b>
+<b class="nc"><i>94</i>&nbsp;        switch (pLoc.getLocation()) {</b>
+<i>95</i>&nbsp;            case OUT:
+<i>96</i>&nbsp;            case VERTEX:
+<b class="nc"><i>97</i>&nbsp;                return false;</b>
+<i>98</i>&nbsp;            case EDGE:
+<b class="nc"><i>99</i>&nbsp;                pLoc.getTriangle().addOnEdge(p, pLoc.getPoint(), ts);</b>
+<b class="nc"><i>100</i>&nbsp;                return true;</b>
+<i>101</i>&nbsp;            default:
+<i>102</i>&nbsp;                break;
+<i>103</i>&nbsp;        }
+<b class="nc"><i>104</i>&nbsp;        Triangle t = pLoc.getTriangle();</b>
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;        // add the newly-created sub-Triangles. These will have the order
+<i>107</i>&nbsp;        // sub[0]: v0, v1, p
+<i>108</i>&nbsp;        // sub[1]: v1, v2, p
+<i>109</i>&nbsp;        // sub[2]: v2, v0, p
+<b class="nc"><i>110</i>&nbsp;        Triangle[] sub = new Triangle[3];</b>
+<b class="nc"><i>111</i>&nbsp;        for (int i = 0; i != 3; ++i) {</b>
+<b class="nc"><i>112</i>&nbsp;            sub[i] = new Triangle(t.vs[i], t.vs[(i + 1) % 3], p);</b>
+<b class="nc"><i>113</i>&nbsp;            ts.add(sub[i]);</b>
+<i>114</i>&nbsp;        }
+<i>115</i>&nbsp;
+<i>116</i>&nbsp;        // create the HistoryEvent for this addition
+<b class="nc"><i>117</i>&nbsp;        t.event = new HistoryEvent(sub);</b>
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;        // the queue that maintains possible Quads to flip
+<b class="nc"><i>120</i>&nbsp;        Queue&lt;Quad&gt; flipQueue = new LinkedList&lt;Quad&gt;();</b>
+<i>121</i>&nbsp;
+<i>122</i>&nbsp;        // from the sub-Triangle order, the guaranteed SharedEdges are:
+<i>123</i>&nbsp;        // sub[0], sub[1] share edge v1, p
+<i>124</i>&nbsp;        // sub[1], sub[2] share edge v2, p
+<i>125</i>&nbsp;        // sub[2], sub[0] share edge v0, p
+<i>126</i>&nbsp;
+<i>127</i>&nbsp;        // the remaining three SharedEdges are as follows (from the original t)
+<i>128</i>&nbsp;        // sub[0].es[2] is edge v0, v1
+<i>129</i>&nbsp;        // sub[1].es[0] is edge v1, v2
+<i>130</i>&nbsp;        // sub[2].es[1] is edge v2, v0
+<i>131</i>&nbsp;        // however (from the invariant) we have no easy way to reference these
+<b class="nc"><i>132</i>&nbsp;        for (int i = 0; i != 3; ++i) {</b>
+<b class="nc"><i>133</i>&nbsp;            int i1 = (i + 1) % 3;</b>
+<b class="nc"><i>134</i>&nbsp;            int i2 = (i + 2) % 3;</b>
+<b class="nc"><i>135</i>&nbsp;            sub[i].es[i1] = new SharedEdge(t.vs[i1], p, sub[i], sub[i1]);</b>
+<b class="nc"><i>136</i>&nbsp;            sub[i1].es[i1] = sub[i].es[i1];</b>
+<b class="nc"><i>137</i>&nbsp;            for (SharedEdge e : t.es) {</b>
+<b class="nc"><i>138</i>&nbsp;                if (e != null &amp;&amp; !e.contains(t.vs[i2])) {</b>
+<b class="nc"><i>139</i>&nbsp;                    e.update(t, sub[i]);</b>
+<b class="nc"><i>140</i>&nbsp;                    sub[i].es[i2] = e;</b>
+<b class="nc"><i>141</i>&nbsp;                    flipQueue.add(new Quad(e, p));</b>
+<i>142</i>&nbsp;                }
+<i>143</i>&nbsp;            }
+<i>144</i>&nbsp;        }
+<i>145</i>&nbsp;
+<i>146</i>&nbsp;        // flip bad edges until the condition is universally true
+<b class="nc"><i>147</i>&nbsp;        while (!flipQueue.isEmpty()) {</b>
+<b class="nc"><i>148</i>&nbsp;            Quad q = flipQueue.remove();</b>
+<b class="nc"><i>149</i>&nbsp;            q.flipBadSharedEdge(flipQueue, ts);</b>
+<b class="nc"><i>150</i>&nbsp;        }</b>
+<i>151</i>&nbsp;
+<b class="nc"><i>152</i>&nbsp;        ts.remove(t);</b>
+<b class="nc"><i>153</i>&nbsp;        return true;</b>
+<i>154</i>&nbsp;    }
+<i>155</i>&nbsp;
+<i>156</i>&nbsp;    /**
+<i>157</i>&nbsp;     * Add p to an edge of this Triangle, splitting both this Triangle and its
+<i>158</i>&nbsp;     * particular neighbor if necessary, adjusting the triangulation set ts as
+<i>159</i>&nbsp;     * needed, and maintaining the Delaunay condition.
+<i>160</i>&nbsp;     * &lt;p&gt;
+<i>161</i>&nbsp;     * N.B. The resulting triangulation will not be unique.
+<i>162</i>&nbsp;     * &lt;p&gt;
+<i>163</i>&nbsp;     * Precondition: this Triangle is an innermost Triangle. p lies on an edge
+<i>164</i>&nbsp;     * of this Triangle.
+<i>165</i>&nbsp;     */
+<i>166</i>&nbsp;    private void addOnEdge(Point p, Point offEdge, Set&lt;Triangle&gt; ts) {
+<i>167</i>&nbsp;        // decide if we need a 4-way split or just a 2-way split
+<b class="nc"><i>168</i>&nbsp;        SharedEdge edge = null;</b>
+<b class="nc"><i>169</i>&nbsp;        for (SharedEdge e : es) {</b>
+<b class="nc"><i>170</i>&nbsp;            if (e != null &amp;&amp; !e.contains(offEdge)) {</b>
+<b class="nc"><i>171</i>&nbsp;                edge = e;</b>
+<i>172</i>&nbsp;            }
+<i>173</i>&nbsp;        }
+<i>174</i>&nbsp;
+<i>175</i>&nbsp;        // need to add either 2 or 4 Triangles
+<b class="nc"><i>176</i>&nbsp;        if (edge != null) {</b>
+<b class="nc"><i>177</i>&nbsp;            SharedEdge[] line = new SharedEdge[2];</b>
+<b class="nc"><i>178</i>&nbsp;            Triangle t1 = edge.t1();</b>
+<b class="nc"><i>179</i>&nbsp;            Triangle t2 = edge.t2();</b>
+<b class="nc"><i>180</i>&nbsp;            Point offEdge1 = edge.unsharedVertex(t1);</b>
+<b class="nc"><i>181</i>&nbsp;            Point offEdge2 = edge.unsharedVertex(t2);</b>
+<b class="nc"><i>182</i>&nbsp;            line = t1.splitIntoTwo(p, offEdge1, ts, line);</b>
+<b class="nc"><i>183</i>&nbsp;            t2.splitIntoTwo(p, offEdge2, ts, line);</b>
+<b class="nc"><i>184</i>&nbsp;        } else {</b>
+<b class="nc"><i>185</i>&nbsp;            splitIntoTwo(p, offEdge, ts, null);</b>
+<i>186</i>&nbsp;        }
+<i>187</i>&nbsp;    }
+<i>188</i>&nbsp;
+<i>189</i>&nbsp;    /**
+<i>190</i>&nbsp;     * Add p to an edge of this Triangle, splitting this Triangle, adjusting
+<i>191</i>&nbsp;     * the triangulation set ts as needed, and maintaining the Delaunay
+<i>192</i>&nbsp;     * condition.
+<i>193</i>&nbsp;     * &lt;p&gt;
+<i>194</i>&nbsp;     * If line is null, don&#39;t try to add any SharedEdges on the split edge.
+<i>195</i>&nbsp;     * If line[0] is a null SharedEdge, create two new SharedEdges.
+<i>196</i>&nbsp;     * Otherwise, line contains two SharedEdges; update them. Return line.
+<i>197</i>&nbsp;     * &lt;p&gt;
+<i>198</i>&nbsp;     * Precondition: this Triangle is an innermost Triangle. p lies on
+<i>199</i>&nbsp;     * an edge of this Triangle. line is null or line.length = 2.
+<i>200</i>&nbsp;     */
+<i>201</i>&nbsp;    private SharedEdge[] splitIntoTwo(Point p, Point offEdge, Set&lt;Triangle&gt; ts,
+<i>202</i>&nbsp;                                      SharedEdge[] line) {
+<b class="nc"><i>203</i>&nbsp;        Point[] a = selectPoint(offEdge);</b>
+<i>204</i>&nbsp;        // sub[i]: on-edge, p, offEdge
+<b class="nc"><i>205</i>&nbsp;        Triangle[] sub = new Triangle[2];</b>
+<b class="nc"><i>206</i>&nbsp;        for (int i = 0; i != 2; ++i) {</b>
+<b class="nc"><i>207</i>&nbsp;            sub[i] = new Triangle(a[i + 1], p, offEdge);</b>
+<b class="nc"><i>208</i>&nbsp;            ts.add(sub[i]);</b>
+<i>209</i>&nbsp;        }
+<i>210</i>&nbsp;
+<b class="nc"><i>211</i>&nbsp;        event = new HistoryEvent(sub);</b>
+<i>212</i>&nbsp;
+<b class="nc"><i>213</i>&nbsp;        Queue&lt;Quad&gt; flipQueue = new LinkedList&lt;Quad&gt;();</b>
+<i>214</i>&nbsp;        // SharedEdges per sub[i]: a[i + 1], p as well as offEdge, p
+<b class="nc"><i>215</i>&nbsp;        sub[0].es[0] = new SharedEdge(offEdge, p, sub[0], sub[1]);</b>
+<b class="nc"><i>216</i>&nbsp;        sub[1].es[0] = sub[0].es[0];</b>
+<b class="nc"><i>217</i>&nbsp;        for (SharedEdge e : es) {</b>
+<b class="nc"><i>218</i>&nbsp;            if (e != null) {</b>
+<b class="nc"><i>219</i>&nbsp;                if (!e.contains(offEdge)) {</b>
+<b class="nc"><i>220</i>&nbsp;                    line = setColinearSharedEdges(line, sub);</b>
+<b class="nc"><i>221</i>&nbsp;                } else if (e.contains(a[1])) {</b>
+<b class="nc"><i>222</i>&nbsp;                    e.update(this, sub[0]);</b>
+<b class="nc"><i>223</i>&nbsp;                    sub[0].es[1] = e;</b>
+<b class="nc"><i>224</i>&nbsp;                    flipQueue.add(new Quad(e, p));</b>
+<i>225</i>&nbsp;                } else { // implies: if (e.contains(a[2])) {
+<b class="nc"><i>226</i>&nbsp;                    e.update(this, sub[1]);</b>
+<b class="nc"><i>227</i>&nbsp;                    sub[1].es[1] = e;</b>
+<b class="nc"><i>228</i>&nbsp;                    flipQueue.add(new Quad(e, p));</b>
+<i>229</i>&nbsp;                }
+<i>230</i>&nbsp;            }
+<i>231</i>&nbsp;        }
+<i>232</i>&nbsp;
+<i>233</i>&nbsp;        // flip bad edges until the condition is universally true
+<b class="nc"><i>234</i>&nbsp;        while (!flipQueue.isEmpty()) {</b>
+<b class="nc"><i>235</i>&nbsp;            Quad q = flipQueue.remove();</b>
+<b class="nc"><i>236</i>&nbsp;            q.flipBadSharedEdge(flipQueue, ts);</b>
+<b class="nc"><i>237</i>&nbsp;        }</b>
+<i>238</i>&nbsp;
+<b class="nc"><i>239</i>&nbsp;        ts.remove(this);</b>
+<b class="nc"><i>240</i>&nbsp;        return line;</b>
+<i>241</i>&nbsp;    }
+<i>242</i>&nbsp;
+<i>243</i>&nbsp;    /**
+<i>244</i>&nbsp;     * Return the angle (in radians) between edges pointing out of vertex p.
+<i>245</i>&nbsp;     * Precondition: p is a vertex of this Triangle.
+<i>246</i>&nbsp;     */
+<i>247</i>&nbsp;    public double angle(Point p) {
+<i>248</i>&nbsp;        // a[0] is the vertex p; a[1] and a[2] are the other two points
+<b class="nc"><i>249</i>&nbsp;        Point[] a = selectPoint(p);</b>
+<i>250</i>&nbsp;
+<i>251</i>&nbsp;        // vector u is (1 - 0), v is (2 - 0).
+<b class="nc"><i>252</i>&nbsp;        int ux = a[1].x - a[0].x;</b>
+<b class="nc"><i>253</i>&nbsp;        int uy = a[1].y - a[0].y;</b>
+<b class="nc"><i>254</i>&nbsp;        int vx = a[2].x - a[0].x;</b>
+<b class="nc"><i>255</i>&nbsp;        int vy = a[2].y - a[0].y;</b>
+<i>256</i>&nbsp;
+<i>257</i>&nbsp;        // find the dot product of u and v
+<b class="nc"><i>258</i>&nbsp;        double dot = ux * vx + uy * vy;</b>
+<i>259</i>&nbsp;
+<i>260</i>&nbsp;        // find the product of magnitudes || u || * || v ||
+<b class="nc"><i>261</i>&nbsp;        double mag = Math.sqrt(ux * ux + uy * uy) * Math.sqrt(vx * vx + vy * vy);</b>
+<i>262</i>&nbsp;
+<i>263</i>&nbsp;        // cos t= u dot v / (|| u || || v ||)
+<b class="nc"><i>264</i>&nbsp;        return Math.acos(dot / mag);</b>
+<i>265</i>&nbsp;    }
+<i>266</i>&nbsp;
+<i>267</i>&nbsp;    /**
+<i>268</i>&nbsp;     * Return a PointLocation for p relative to this Triangle.
+<i>269</i>&nbsp;     */
+<i>270</i>&nbsp;    public PointLocation pointLocation(Point p) {
+<b class="nc"><i>271</i>&nbsp;        double l1 = ((vs[1].y - vs[2].y) * (p.x - vs[2].x)</b>
+<i>272</i>&nbsp;                + (vs[2].x - vs[1].x) * (p.y - vs[2].y)) / detT;
+<b class="nc"><i>273</i>&nbsp;        double l2 = ((vs[2].y - vs[0].y) * (p.x - vs[2].x)</b>
+<i>274</i>&nbsp;                + (vs[0].x - vs[2].x) * (p.y - vs[2].y)) / detT;
+<b class="nc"><i>275</i>&nbsp;        double l3 = 1 - l1 - l2;</b>
+<i>276</i>&nbsp;
+<b class="nc"><i>277</i>&nbsp;        if (l1 &lt; 0 || l2 &lt; 0 || l3 &lt; 0) {</b>
+<b class="nc"><i>278</i>&nbsp;            return PointLocation.makeOut();</b>
+<i>279</i>&nbsp;        }
+<b class="nc"><i>280</i>&nbsp;        if ((l1 == 0 &amp;&amp; l2 == 0) || (l2 == 0 &amp;&amp; l3 == 0)</b>
+<i>281</i>&nbsp;                || (l3 == 0 &amp;&amp; l1 == 0)) {
+<b class="nc"><i>282</i>&nbsp;            return PointLocation.makeVertex(this, p);</b>
+<i>283</i>&nbsp;        }
+<b class="nc"><i>284</i>&nbsp;        if (l1 == 0) {</b>
+<b class="nc"><i>285</i>&nbsp;            return PointLocation.makeEdge(this, vs[0]);</b>
+<i>286</i>&nbsp;        }
+<b class="nc"><i>287</i>&nbsp;        if (l2 == 0) {</b>
+<b class="nc"><i>288</i>&nbsp;            return PointLocation.makeEdge(this, vs[1]);</b>
+<i>289</i>&nbsp;        }
+<b class="nc"><i>290</i>&nbsp;        if (l3 == 0) {</b>
+<b class="nc"><i>291</i>&nbsp;            return PointLocation.makeEdge(this, vs[2]);</b>
+<i>292</i>&nbsp;        }
+<b class="nc"><i>293</i>&nbsp;        return PointLocation.makeIn(this);</b>
+<i>294</i>&nbsp;    }
+<i>295</i>&nbsp;
+<i>296</i>&nbsp;    /**
+<i>297</i>&nbsp;     * Return a PointLocation for the location of p within this Triangle.
+<i>298</i>&nbsp;     * The PointLocation will be on the innermost Triangle possible.
+<i>299</i>&nbsp;     */
+<i>300</i>&nbsp;    private PointLocation getInnermost(Point p) {
+<b class="nc"><i>301</i>&nbsp;        PointLocation pLoc = pointLocation(p);</b>
+<b class="nc"><i>302</i>&nbsp;        switch (pLoc.getLocation()) {</b>
+<i>303</i>&nbsp;            case EDGE:
+<i>304</i>&nbsp;            case IN:
+<b class="nc"><i>305</i>&nbsp;                HistoryEvent he = pLoc.getTriangle().event;</b>
+<b class="nc"><i>306</i>&nbsp;                if (he == null) {</b>
+<b class="nc"><i>307</i>&nbsp;                    return pLoc;</b>
+<i>308</i>&nbsp;                }
+<b class="nc"><i>309</i>&nbsp;                pLoc = he.select(p);</b>
+<b class="nc"><i>310</i>&nbsp;                if (pLoc.isNotOut()) {</b>
+<b class="nc"><i>311</i>&nbsp;                    return pLoc.getTriangle().getInnermost(p);</b>
+<i>312</i>&nbsp;                } else {
+<b class="nc"><i>313</i>&nbsp;                    return pLoc;</b>
+<i>314</i>&nbsp;                }
+<i>315</i>&nbsp;            default:
+<b class="nc"><i>316</i>&nbsp;                return pLoc;</b>
+<i>317</i>&nbsp;        }
+<i>318</i>&nbsp;    }
+<i>319</i>&nbsp;
+<i>320</i>&nbsp;    /**
+<i>321</i>&nbsp;     * Return a 3-element Point array a where p is a[0] and the
+<i>322</i>&nbsp;     * remaining vertices of this Triangle are a[1] and a[2].
+<i>323</i>&nbsp;     * Precondition: p is a vertex of this Triangle.
+<i>324</i>&nbsp;     */
+<i>325</i>&nbsp;    private Point[] selectPoint(Point p) {
+<b class="nc"><i>326</i>&nbsp;        int i = 0;</b>
+<b class="nc"><i>327</i>&nbsp;        while (i &lt; 2 &amp;&amp; p != vs[i]) {</b>
+<b class="nc"><i>328</i>&nbsp;            ++i;</b>
+<i>329</i>&nbsp;        }
+<b class="nc"><i>330</i>&nbsp;        return new Point[]{vs[i], vs[(i + 1) % 3], vs[(i + 2) % 3]};</b>
+<i>331</i>&nbsp;    }
+<i>332</i>&nbsp;
+<i>333</i>&nbsp;    /**
+<i>334</i>&nbsp;     * Add this Triangle&#39;s UEdges to the given Set, only.
+<i>335</i>&nbsp;     * Precondition: edges is a mutable set.
+<i>336</i>&nbsp;     */
+<i>337</i>&nbsp;    public void addUEdgesToSet(Set&lt;UEdge&gt; edges) {
+<b class="nc"><i>338</i>&nbsp;        for (int i = 0; i != 3; ++i) {</b>
+<b class="nc"><i>339</i>&nbsp;            edges.add(new UEdge(vs[i], vs[(i + 1) % 3]));</b>
+<i>340</i>&nbsp;        }
+<i>341</i>&nbsp;    }
+<i>342</i>&nbsp;
+<i>343</i>&nbsp;    /**
+<i>344</i>&nbsp;     * Return this Triangle&#39;s three vertices, delimited by hyphens.
+<i>345</i>&nbsp;     */
+<i>346</i>&nbsp;    @Override
+<i>347</i>&nbsp;    public String toString() {
+<b class="nc"><i>348</i>&nbsp;        return vs[0] + &quot;-&quot; + vs[1] + &quot;-&quot; + vs[2];</b>
+<i>349</i>&nbsp;    }
+<i>350</i>&nbsp;
+<i>351</i>&nbsp;    /**
+<i>352</i>&nbsp;     * An instance represents a pair of Triangles with a possibly bad edge,
+<i>353</i>&nbsp;     * i.e. an edge that may require a flip.
+<i>354</i>&nbsp;     */
+<i>355</i>&nbsp;    private static class Quad {
+<i>356</i>&nbsp;
+<i>357</i>&nbsp;        /* The (possibly) bad edge of this Quad */
+<i>358</i>&nbsp;        private SharedEdge edge;
+<i>359</i>&nbsp;
+<i>360</i>&nbsp;        /* The Triangle which contains the newly added Point */
+<i>361</i>&nbsp;        private Triangle inner;
+<i>362</i>&nbsp;
+<i>363</i>&nbsp;        /* The Triangle which does NOT contain the newly added Point */
+<i>364</i>&nbsp;        private Triangle outer;
+<i>365</i>&nbsp;
+<i>366</i>&nbsp;        /* The Point just added to the Triangulation. New edges containing this
+<i>367</i>&nbsp;         * Point cannot be bad. This Point is the unshared vertex of inner. */
+<i>368</i>&nbsp;        private Point add;
+<i>369</i>&nbsp;
+<i>370</i>&nbsp;        /* The unshared vertex of outer, which is also the farthest from add. */
+<i>371</i>&nbsp;        private Point far;
+<i>372</i>&nbsp;
+<i>373</i>&nbsp;        /*** Constructor: a bad edge and an added Point. */
+<b class="nc"><i>374</i>&nbsp;        public Quad(SharedEdge edge, Point add) {</b>
+<b class="nc"><i>375</i>&nbsp;            this.add = add;</b>
+<b class="nc"><i>376</i>&nbsp;            this.edge = edge;</b>
+<b class="nc"><i>377</i>&nbsp;            if (edge.unsharedVertex(edge.t1()).equals(add)) {</b>
+<b class="nc"><i>378</i>&nbsp;                inner = edge.t1();</b>
+<b class="nc"><i>379</i>&nbsp;                outer = edge.t2();</b>
+<i>380</i>&nbsp;            } else {
+<b class="nc"><i>381</i>&nbsp;                inner = edge.t2();</b>
+<b class="nc"><i>382</i>&nbsp;                outer = edge.t1();</b>
+<i>383</i>&nbsp;            }
+<b class="nc"><i>384</i>&nbsp;            far = edge.unsharedVertex(outer);</b>
+<i>385</i>&nbsp;        }
+<i>386</i>&nbsp;
+<i>387</i>&nbsp;        /**
+<i>388</i>&nbsp;         * Return true iff this Quad satisfies the Delaunay condition.
+<i>389</i>&nbsp;         */
+<i>390</i>&nbsp;        private boolean isDelaunay() {
+<b class="nc"><i>391</i>&nbsp;            return inner.angle(add) + outer.angle(far) &lt;= Math.PI;</b>
+<i>392</i>&nbsp;        }
+<i>393</i>&nbsp;
+<i>394</i>&nbsp;        /*** If needed, flips this bad edge, creating two new Triangles and adding new
+<i>395</i>&nbsp;         * possibly bad edges to the flip queue. Otherwise, does nothing. */
+<i>396</i>&nbsp;        public void flipBadSharedEdge(Queue&lt;Quad&gt; queue, Set&lt;Triangle&gt; ts) {
+<b class="nc"><i>397</i>&nbsp;            if (isDelaunay()) {</b>
+<i>398</i>&nbsp;                return;
+<i>399</i>&nbsp;            }
+<i>400</i>&nbsp;
+<i>401</i>&nbsp;            // switch the shared and unshared Points
+<b class="nc"><i>402</i>&nbsp;            Triangle flip1 = new Triangle(add, far, edge.p1());</b>
+<b class="nc"><i>403</i>&nbsp;            Triangle flip2 = new Triangle(add, far, edge.p2());</b>
+<i>404</i>&nbsp;
+<b class="nc"><i>405</i>&nbsp;            ts.remove(inner);</b>
+<b class="nc"><i>406</i>&nbsp;            ts.remove(outer);</b>
+<b class="nc"><i>407</i>&nbsp;            ts.add(flip1);</b>
+<b class="nc"><i>408</i>&nbsp;            ts.add(flip2);</b>
+<i>409</i>&nbsp;
+<i>410</i>&nbsp;            // make an event for this flip
+<b class="nc"><i>411</i>&nbsp;            inner.event = new HistoryEvent(new Triangle[]{flip1, flip2});</b>
+<b class="nc"><i>412</i>&nbsp;            outer.event = inner.event;</b>
+<i>413</i>&nbsp;
+<i>414</i>&nbsp;            // add the newly flipped edge
+<b class="nc"><i>415</i>&nbsp;            flip1.es[0] = new SharedEdge(add, far, flip1, flip2);</b>
+<b class="nc"><i>416</i>&nbsp;            flip2.es[0] = flip1.es[0];</b>
+<i>417</i>&nbsp;
+<i>418</i>&nbsp;            // update the old inner edges to the new flipped Triangles
+<b class="nc"><i>419</i>&nbsp;            for (SharedEdge e : inner.es) {</b>
+<b class="nc"><i>420</i>&nbsp;                if (e != null &amp;&amp; e != edge) {</b>
+<b class="nc"><i>421</i>&nbsp;                    if (e.contains(edge.p1())) {</b>
+<b class="nc"><i>422</i>&nbsp;                        e.update(inner, flip1);</b>
+<b class="nc"><i>423</i>&nbsp;                        flip1.es[1] = e;</b>
+<i>424</i>&nbsp;                    } else {
+<b class="nc"><i>425</i>&nbsp;                        e.update(inner, flip2);</b>
+<b class="nc"><i>426</i>&nbsp;                        flip2.es[1] = e;</b>
+<i>427</i>&nbsp;                    }
+<i>428</i>&nbsp;                }
+<i>429</i>&nbsp;            }
+<i>430</i>&nbsp;
+<i>431</i>&nbsp;            // update the old outer edges to the new flipped Triangles
+<b class="nc"><i>432</i>&nbsp;            for (SharedEdge e : outer.es) {</b>
+<b class="nc"><i>433</i>&nbsp;                if (e != null &amp;&amp; e != edge) {</b>
+<b class="nc"><i>434</i>&nbsp;                    if (e.contains(edge.p1())) {</b>
+<b class="nc"><i>435</i>&nbsp;                        e.update(outer, flip1);</b>
+<b class="nc"><i>436</i>&nbsp;                        flip1.es[2] = e;</b>
+<b class="nc"><i>437</i>&nbsp;                        queue.add(new Quad(e, add));</b>
+<i>438</i>&nbsp;                    } else {
+<b class="nc"><i>439</i>&nbsp;                        e.update(outer, flip2);</b>
+<b class="nc"><i>440</i>&nbsp;                        flip2.es[2] = e;</b>
+<b class="nc"><i>441</i>&nbsp;                        queue.add(new Quad(e, add));</b>
+<i>442</i>&nbsp;                    }
+<i>443</i>&nbsp;                }
+<i>444</i>&nbsp;            }
+<i>445</i>&nbsp;        }
+<i>446</i>&nbsp;    }
+<i>447</i>&nbsp;
+<i>448</i>&nbsp;    /**
+<i>449</i>&nbsp;     * An instance represents an edge shared between two Triangles.
+<i>450</i>&nbsp;     * The order of the two connected Points and Triangles is arbitrary.
+<i>451</i>&nbsp;     */
+<i>452</i>&nbsp;    private static class SharedEdge {
+<i>453</i>&nbsp;        /* The two endpoints of this segment */
+<i>454</i>&nbsp;        private Point p1, p2;
+<i>455</i>&nbsp;
+<i>456</i>&nbsp;        /* The two Triangles sharing this edge. Neither Triangle should be
+<i>457</i>&nbsp;         * null. */
+<i>458</i>&nbsp;        private Triangle t1, t2;
+<i>459</i>&nbsp;
+<i>460</i>&nbsp;        /**
+<i>461</i>&nbsp;         * Constructor: the Points bounding this edge, and two adjacent
+<i>462</i>&nbsp;         * Triangles.
+<i>463</i>&nbsp;         */
+<b class="nc"><i>464</i>&nbsp;        public SharedEdge(Point p1, Point p2, Triangle t1, Triangle t2) {</b>
+<b class="nc"><i>465</i>&nbsp;            if (p1.equals(p2)) {</b>
+<b class="nc"><i>466</i>&nbsp;                throw new IllegalArgumentException(&quot;equal Points&quot;);</b>
+<b class="nc"><i>467</i>&nbsp;            } else if (t1 == t2) {</b>
+<b class="nc"><i>468</i>&nbsp;                throw new IllegalArgumentException(&quot;same Triangles&quot;);</b>
+<i>469</i>&nbsp;            }
+<b class="nc"><i>470</i>&nbsp;            this.p1 = p1;</b>
+<b class="nc"><i>471</i>&nbsp;            this.p2 = p2;</b>
+<b class="nc"><i>472</i>&nbsp;            this.t1 = t1;</b>
+<b class="nc"><i>473</i>&nbsp;            this.t2 = t2;</b>
+<i>474</i>&nbsp;        }
+<i>475</i>&nbsp;
+<i>476</i>&nbsp;        /**
+<i>477</i>&nbsp;         * Return the first endpoint of this edge.
+<i>478</i>&nbsp;         */
+<i>479</i>&nbsp;        public Point p1() {
+<b class="nc"><i>480</i>&nbsp;            return p1;</b>
+<i>481</i>&nbsp;        }
+<i>482</i>&nbsp;
+<i>483</i>&nbsp;        /**
+<i>484</i>&nbsp;         * Return the second endpoint of this edge.
+<i>485</i>&nbsp;         */
+<i>486</i>&nbsp;        public Point p2() {
+<b class="nc"><i>487</i>&nbsp;            return p2;</b>
+<i>488</i>&nbsp;        }
+<i>489</i>&nbsp;
+<i>490</i>&nbsp;        /**
+<i>491</i>&nbsp;         * Return the first Triangle sharing this edge.
+<i>492</i>&nbsp;         */
+<i>493</i>&nbsp;        public Triangle t1() {
+<b class="nc"><i>494</i>&nbsp;            return t1;</b>
+<i>495</i>&nbsp;        }
+<i>496</i>&nbsp;
+<i>497</i>&nbsp;        /**
+<i>498</i>&nbsp;         * Return the second Triangle sharing this edge.
+<i>499</i>&nbsp;         */
+<i>500</i>&nbsp;        public Triangle t2() {
+<b class="nc"><i>501</i>&nbsp;            return t2;</b>
+<i>502</i>&nbsp;        }
+<i>503</i>&nbsp;
+<i>504</i>&nbsp;        /**
+<i>505</i>&nbsp;         * Returns true iff this contains p.
+<i>506</i>&nbsp;         */
+<i>507</i>&nbsp;        public boolean contains(Point p) {
+<b class="nc"><i>508</i>&nbsp;            return p.equals(p1) || p.equals(p2);</b>
+<i>509</i>&nbsp;        }
+<i>510</i>&nbsp;
+<i>511</i>&nbsp;        /**
+<i>512</i>&nbsp;         * Change oldT to newT in this edge.
+<i>513</i>&nbsp;         * Precondition: oldT has this edge.
+<i>514</i>&nbsp;         */
+<i>515</i>&nbsp;        public void update(Triangle oldT, Triangle newT) {
+<b class="nc"><i>516</i>&nbsp;            if (t1 == oldT) {</b>
+<b class="nc"><i>517</i>&nbsp;                t1 = newT;</b>
+<i>518</i>&nbsp;                return;
+<b class="nc"><i>519</i>&nbsp;            } else if (t2 == oldT) {</b>
+<b class="nc"><i>520</i>&nbsp;                t2 = newT;</b>
+<i>521</i>&nbsp;                return;
+<i>522</i>&nbsp;            }
+<b class="nc"><i>523</i>&nbsp;            throw new IllegalArgumentException(&quot;oldT doesn&#39;t have this edge&quot;);</b>
+<i>524</i>&nbsp;        }
+<i>525</i>&nbsp;
+<i>526</i>&nbsp;        /**
+<i>527</i>&nbsp;         * Returns the Point in Triangle t that doesn&#39;t lie on this edge.
+<i>528</i>&nbsp;         * Precondition: t has this edge.
+<i>529</i>&nbsp;         */
+<i>530</i>&nbsp;        public Point unsharedVertex(Triangle t) {
+<b class="nc"><i>531</i>&nbsp;            if (t != t1 &amp;&amp; t != t2) {</b>
+<b class="nc"><i>532</i>&nbsp;                throw new IllegalArgumentException(&quot;t doesn&#39;t have this edge&quot;);</b>
+<i>533</i>&nbsp;            }
+<b class="nc"><i>534</i>&nbsp;            for (Point p : t.vs) {</b>
+<b class="nc"><i>535</i>&nbsp;                if (!contains(p)) {</b>
+<b class="nc"><i>536</i>&nbsp;                    return p;</b>
+<i>537</i>&nbsp;                }
+<i>538</i>&nbsp;            }
+<b class="nc"><i>539</i>&nbsp;            throw new IllegalStateException(&quot;No unshared vertices&quot;);</b>
+<i>540</i>&nbsp;        }
+<i>541</i>&nbsp;    }
+<i>542</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-11-05 12:12</div>
+</div>
+</body>
+</html>
