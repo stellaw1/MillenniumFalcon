@@ -20,7 +20,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      *      vertex != null and is not already part of the Graph.
      *      edge != null and is not already part of the Graph.
      *
-     * Abstract Function:
+     * Abstraction Function:
      *
      */
 
