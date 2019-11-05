@@ -117,6 +117,13 @@ public class MillenniumFalcon implements Spaceship {
                 return b.spice() - a.spice();
             }
         });
+<<<<<<< HEAD
+=======
+        int totalSpiceInUniverse = 0;
+        for (Planet a : allPlanets){
+            totalSpiceInUniverse += a.spice();
+        }
+>>>>>>> refs/remotes/origin/master
 
         HashSet<Planet> visitedPlanets = new HashSet<>();
 

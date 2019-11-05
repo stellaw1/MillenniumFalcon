@@ -18,9 +18,6 @@ public class Stage3Test {
 
     //create a universe instance
     Universe myUniverse;
-
-    long seed = 4646556996762522249L;
-    BenchmarkView view;
     Kamino myKamino;
 
     @Test
@@ -29,6 +26,20 @@ public class Stage3Test {
         myKamino.main(args);
 
         //view.scoreStats();
+    }
+
+    @Test
+    public void testGather() {
+        long seed = 4646556996762522249L;
+        BenchmarkView view = new BenchmarkView();
+        Kamino test = new Kamino(seed, new MillenniumFalcon(), view);
+
+        String[] args = {"--benchmark"};
+
+        test.main(args);
+
+        view.scoreStats();
+
     }
 
 

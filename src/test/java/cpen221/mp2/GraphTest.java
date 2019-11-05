@@ -47,6 +47,7 @@ public class GraphTest {
 
         //test adding null edges/ vertices fail
         assertFalse(g.addVertex(null));
+        assertFalse(g.addVertex(v1));
         assertFalse(g.addEdge(null));
         assertFalse(g.addEdge(e4));
         assertFalse(g.edge(v1, v5));
@@ -96,6 +97,7 @@ public class GraphTest {
 
     }
 
+    //TODO
     //test immutability of Graph.java
     @Test
     public void testImmutability() {
