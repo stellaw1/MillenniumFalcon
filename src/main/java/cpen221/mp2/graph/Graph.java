@@ -11,19 +11,20 @@ import java.util.*;
  */
 public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>, IGraph<V, E> {
 
+    /** Set of all vertices in graph */
     private HashSet<V> vertexSet = new HashSet<>();
+
+    /** Set of all edges in graph */
     private HashSet<E> edgeSet = new HashSet<>();
 
-    //TODO
-    /*
-     * Rep Invariant:
-     *      vertex is of type Vertex or a type that is a child of Vertex.
-     *      edge is of type Edge that is of the same Vertex type as Vertex v.
-     *
-     * Abstraction Function:
-     *      vertexSet represents all nodes in the graph.
-     *      edgeSet represents all edges that connect two nodes in the graph.
-     */
+    // Representation Invariant
+    //      E instanceof Edge<V> && V instanceof Vertex.
+    //
+    // Abstraction Function:
+    //      represents a simple, undirected graph g where
+    //      g.vertexSet represents all the nodes in g and
+    //      g.edgeSet represents all the node-to-node connections that exist in g
+
 
 
     ////////// methods from IGraph Interface //////////
@@ -390,9 +391,10 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     }
 
-    //TODO
     /**
-     * Helper method for Graph.search that remembers which nodes have already been searched.
+     * Recursive helper method for Graph.search that finds all vertices w that are no more than
+     * a path distance of range from v while remembering nodes that have already been searched.
+     * Modifies visitedNodes by adding new nodes after visiting them
      *
      * @param v the vertex to start the search from.
      * @param range the radius of the search.

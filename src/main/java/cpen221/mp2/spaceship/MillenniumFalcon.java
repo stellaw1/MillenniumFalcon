@@ -110,14 +110,13 @@ public class MillenniumFalcon implements Spaceship {
         }
     }
 
-    //TODO descending or non-ascending ?
     /**
-     * Helper method that sorts a set into a List in desciending order of planet spice level
+     * Helper method that sorts a set into a List in non-ascending order of planet spice level
      *
      * @param allPlanets Set of all planets in the universe
-     * @return sorted ArrayList of type Planet in descending order
+     * @return sorted ArrayList of type Planet in non-ascending order
      */
-    public ArrayList<Planet> sortBySpiceLevel(Set<Planet> allPlanets) {
+    private ArrayList<Planet> sortBySpiceLevel(Set<Planet> allPlanets) {
         ArrayList<Planet> spiciestPlanets = new ArrayList<>(allPlanets);
 
         spiciestPlanets.sort(new Comparator<>() {
@@ -130,21 +129,21 @@ public class MillenniumFalcon implements Spaceship {
         return spiciestPlanets;
     }
 
-    //TODO fact check
     /**
-     * Calculates the longest distance between two planets in the universe using their coordinates
+     * Calculates the spanning distance between corner planets in the universe using their coordinates
      *
      * @param currentPlanet Planet that MillenniumFalcon is on right now
      * @param allPlanets Set of all Planets in the universe
      * @param allPlanetsGraph Graph of all Planets and Links in the universe
-     * @return integer that represents the longest path
+     * @return integer that represents the length of the largest spanning distance
      */
-    public int getLongestPathLength(Planet currentPlanet, Set<Planet> allPlanets, Graph allPlanetsGraph) {
+    private int getLongestPathLength(Planet currentPlanet, Set<Planet> allPlanets, Graph allPlanetsGraph) {
         Planet topLeftPlanet = currentPlanet;
         Planet topRightPlanet =currentPlanet;
         Planet bottomLeftPlanet = currentPlanet;
         Planet bottomRightPlanet = currentPlanet;
 
+        //find corner planets
         for (Planet checkPlanet : allPlanets) {
             int x = checkPlanet.x();
             int y = checkPlanet.y();
@@ -163,7 +162,7 @@ public class MillenniumFalcon implements Spaceship {
         }
 
         //Define most amount of fuel needed to be the distance from the farthest corner nodes
-        //plus 1/5 of the distance from top left to top right to give a little lee-way
+        // plus 1/5 of the distance from top left to top right to give a little lee-way
         return (int) (0.2 * allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, topRightPlanet)))
                 + Math.max(Math.max(allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, topRightPlanet)),
                 allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, bottomLeftPlanet))),
