@@ -15,12 +15,13 @@ public class MillenniumFalcon implements Spaceship {
     long startTime = System.nanoTime(); // start time of rescue phase
 
     /**
+     * method used in Hunt stage of Kamino game
      *
-     * @param state
+     * @param state HunterStage instance that represents the state of the space ship and provides all
+     *              necessary methods to move through the galaxy and find the missing spaceship.
      */
     @Override
     public void hunt(HunterStage state) {
-
         HashMap<Integer, Integer> stagesMap = new HashMap<>();
         HashSet<Integer> visitedPlanetIDs = new HashSet<>();
 
@@ -37,7 +38,7 @@ public class MillenniumFalcon implements Spaceship {
             }
 
             //sort allNeighbors from highest signal to lowest signal
-            Collections.sort(allNeighbors, new Comparator<PlanetStatus>() {
+            allNeighbors.sort(new Comparator<>() {
                 @Override
                 public int compare(PlanetStatus thisOne, PlanetStatus otherOne) {
                     if (thisOne.signal() > otherOne.signal()) {
@@ -65,65 +66,24 @@ public class MillenniumFalcon implements Spaceship {
     }
 
     /**
+     * Method used in the gather stage of the Kamino game
      *
-     * @param state
+     * @param state GathererStage instance
      */
     @Override
     public void gather(GathererStage state) {
-        final long SECONDS15 = 15000000000L;
         Graph<Planet, Link> allPlanetsGraph = (Graph) state.planetGraph();
         Set<Planet> allPlanets = allPlanetsGraph.allVertices();
 
-        Planet topLeftPlanet = state.currentPlanet();
-        Planet topRightPlanet = state.currentPlanet();
-        Planet bottomLeftPlanet = state.currentPlanet();
-        Planet bottomRightPlanet = state.currentPlanet();
+        int longestPathLength = getLongestPathLength(state.currentPlanet(), allPlanets, allPlanetsGraph);
 
-        for (Planet checkPlanet : allPlanets) {
-            int x = checkPlanet.x();
-            int y = checkPlanet.y();
-            if (x <= topLeftPlanet.x() && y <= topLeftPlanet.y()) {
-                topLeftPlanet = checkPlanet;
-            }
-            if (x >= topRightPlanet.x() && y <= topRightPlanet.y()) {
-                topRightPlanet = checkPlanet;
-            }
-            if (x <= bottomLeftPlanet.x() && y >= bottomLeftPlanet.y()) {
-                bottomLeftPlanet = checkPlanet;
-            }
-            if (x >= bottomRightPlanet.x() && y >= bottomRightPlanet.y()) {
-                bottomRightPlanet = checkPlanet;
-            }
-        }
-
-
-        //Define most amount of fuel needed to be the distance from the farthest corner nodes
-        //plus 1/5 of the distance from top left to top right to give a little lee-way
-        int longestPathLength = (int)(0.2*allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, topRightPlanet))) +
-                Math.max(Math.max(allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, topRightPlanet)),
-                        allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, bottomLeftPlanet))),
-                        allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, bottomRightPlanet)));
-
-        ArrayList<Planet> spiciestPlanets = new ArrayList<>();
-        spiciestPlanets.addAll(allPlanets);
-
-        Collections.sort(spiciestPlanets, new Comparator<Planet>() {
-            @Override
-            public int compare(Planet a, Planet b) {
-                return b.spice() - a.spice();
-            }
-        });
-
-        int totalSpiceInUniverse = 0;
-        for (Planet a : allPlanets){
-            totalSpiceInUniverse += a.spice();
-        }
-
+        ArrayList<Planet> spiciestPlanets = sortBySpiceLevel(allPlanets);
 
         HashSet<Planet> visitedPlanets = new HashSet<>();
 
         for (Planet nextMostSpicy : spiciestPlanets) {
-            if ((System.nanoTime() - startTime) > SECONDS15) {
+            //begin journey to Earth if elapsed time is over 15 seconds
+            if ((System.nanoTime() - startTime) > 15000000000L) {
                 List<Planet> pathToHome = allPlanetsGraph.shortestPath(state.currentPlanet(), state.earth());
                 pathToHome.remove(0);
                 for (Planet next : pathToHome) {
@@ -148,6 +108,67 @@ public class MillenniumFalcon implements Spaceship {
                 }
             }
         }
+    }
+
+    //TODO descending or non-ascending ?
+    /**
+     * Helper method that sorts a set into a List in desciending order of planet spice level
+     *
+     * @param allPlanets Set of all planets in the universe
+     * @return sorted ArrayList of type Planet in descending order
+     */
+    public ArrayList<Planet> sortBySpiceLevel(Set<Planet> allPlanets) {
+        ArrayList<Planet> spiciestPlanets = new ArrayList<>(allPlanets);
+
+        spiciestPlanets.sort(new Comparator<>() {
+            @Override
+            public int compare(Planet a, Planet b) {
+                return b.spice() - a.spice();
+            }
+        });
+
+        return spiciestPlanets;
+    }
+
+    //TODO fact check
+    /**
+     * Calculates the longest distance between two planets in the universe using their coordinates
+     *
+     * @param currentPlanet Planet that MillenniumFalcon is on right now
+     * @param allPlanets Set of all Planets in the universe
+     * @param allPlanetsGraph Graph of all Planets and Links in the universe
+     * @return integer that represents the longest path
+     */
+    public int getLongestPathLength(Planet currentPlanet, Set<Planet> allPlanets, Graph allPlanetsGraph) {
+        Planet topLeftPlanet = currentPlanet;
+        Planet topRightPlanet =currentPlanet;
+        Planet bottomLeftPlanet = currentPlanet;
+        Planet bottomRightPlanet = currentPlanet;
+
+        for (Planet checkPlanet : allPlanets) {
+            int x = checkPlanet.x();
+            int y = checkPlanet.y();
+            if (x <= topLeftPlanet.x() && y <= topLeftPlanet.y()) {
+                topLeftPlanet = checkPlanet;
+            }
+            if (x >= topRightPlanet.x() && y <= topRightPlanet.y()) {
+                topRightPlanet = checkPlanet;
+            }
+            if (x <= bottomLeftPlanet.x() && y >= bottomLeftPlanet.y()) {
+                bottomLeftPlanet = checkPlanet;
+            }
+            if (x >= bottomRightPlanet.x() && y >= bottomRightPlanet.y()) {
+                bottomRightPlanet = checkPlanet;
+            }
+        }
+
+        //Define most amount of fuel needed to be the distance from the farthest corner nodes
+        //plus 1/5 of the distance from top left to top right to give a little lee-way
+        return (int) (0.2 * allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, topRightPlanet)))
+                + Math.max(Math.max(allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, topRightPlanet)),
+                allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, bottomLeftPlanet))),
+                allPlanetsGraph.pathLength(allPlanetsGraph.shortestPath(topLeftPlanet, bottomRightPlanet)));
+
     }
 }
 

@@ -66,4 +66,19 @@ public class Stage3Test {
         assertTrue(myKamino.gatherSucceeded());
     }
 
+    //Test on small planet
+    @Test
+    public void testMF4() {
+        long seed = -261849872924051806L;
+        QuietView view = new QuietView();
+        Kamino myKamino = new Kamino(seed, new MillenniumFalcon(), view);
+
+        String[] args = {"-q", "--seed=" + seed};
+
+        myKamino.main(args);
+
+        assertTrue(myKamino.huntSucceeded());
+        assertTrue(myKamino.gatherSucceeded());
+    }
+
 }
