@@ -68,7 +68,8 @@ public class MillenniumFalcon implements Spaceship {
     /**
      * Method used in the gather stage of the Kamino game
      *
-     * @param state GathererStage instance
+     * @param state GathererStage instance that represents the state of the space ship and provides all
+     *                    necessary methods to move through the galaxy and collect spice.
      */
     @Override
     public void gather(GathererStage state) {
@@ -114,7 +115,7 @@ public class MillenniumFalcon implements Spaceship {
      * Helper method that sorts a set into a List in non-ascending order of planet spice level
      *
      * @param allPlanets Set of all planets in the universe
-     * @return sorted ArrayList of type Planet in non-ascending order
+     * @return sorted ArrayList of type Planet in non-ascending order by spice
      */
     private ArrayList<Planet> sortBySpiceLevel(Set<Planet> allPlanets) {
         ArrayList<Planet> spiciestPlanets = new ArrayList<>(allPlanets);
@@ -130,7 +131,7 @@ public class MillenniumFalcon implements Spaceship {
     }
 
     /**
-     * Calculates the spanning distance between corner planets in the universe using their coordinates
+     * Calculates the spanning distance between corners in the universe using the coordinates of a planet in each corner
      *
      * @param currentPlanet Planet that MillenniumFalcon is on right now
      * @param allPlanets Set of all Planets in the universe
@@ -143,7 +144,7 @@ public class MillenniumFalcon implements Spaceship {
         Planet bottomLeftPlanet = currentPlanet;
         Planet bottomRightPlanet = currentPlanet;
 
-        //find corner planets
+        //find a planet in each corner:
         for (Planet checkPlanet : allPlanets) {
             int x = checkPlanet.x();
             int y = checkPlanet.y();

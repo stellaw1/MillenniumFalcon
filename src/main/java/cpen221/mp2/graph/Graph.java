@@ -298,7 +298,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     /**
      * Compute the minimum spanning tree of the graph.
      *
-     * @return a list of edges that forms a minimum spanning tree of the graph
+     * @return a list of edges that forms a minimum spanning tree of the graph. The list can have any arbitrary order.
      */
     public List<E> minimumSpanningTree() {
         List<E> mstEdges = new ArrayList<>();
