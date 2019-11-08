@@ -12,7 +12,15 @@ import java.util.*;
  */
 public class MillenniumFalcon implements Spaceship {
 
-    long startTime = System.nanoTime(); // start time of rescue phase
+    /** start time of rescue phase */
+    long startTime = System.nanoTime();
+
+    // Representation Invariant:
+    //
+    // Abstract Function:
+    //      An instance MF represents a spaceship that can find the planet Kamino
+    //      and gather spices on its way back from Kamino to Earth.
+
 
     /**
      * method used in Hunt stage of Kamino game
@@ -37,7 +45,7 @@ public class MillenniumFalcon implements Spaceship {
                 allNeighborsIDSet.add(thisNeighbor.id());
             }
 
-            //sort allNeighbors from highest signal to lowest signal
+            //sort allNeighbors from highest signal planet to lowest signal planet
             allNeighbors.sort(new Comparator<>() {
                 @Override
                 public int compare(PlanetStatus thisOne, PlanetStatus otherOne) {

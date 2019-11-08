@@ -18,10 +18,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     private HashSet<E> edgeSet = new HashSet<>();
 
     // Representation Invariant
-    //      E instanceof Edge<V> && V instanceof Vertex.
+    //      in HashSet<E>: E instanceof Edge<V> && E != null && both endpoint vertices of any edge exist in the graph
+    //      in HashSet<V>: V instanceof Vertex && V != null && V is unique (ie, no vertices have the same ID)
     //
     // Abstraction Function:
-    //      represents a simple, undirected graph g where
+    //      An instance g represents a simple, undirected graph where
     //      g.vertexSet represents all the nodes in g and
     //      g.edgeSet represents all the node-to-node connections that exist in g
 

@@ -4,9 +4,26 @@ import java.util.NoSuchElementException;
 
 public class Edge<V extends Vertex> {
 
+    /** One endpoint of the Edge */
     private V v1;
+
+    /** Other endpoint of the Edge */
     private V v2;
+
+    /** Weight of the edge */
     private int length;
+
+    // Representation Invariant:
+    //      for v1: v1 != null && !v1.equals(v2)
+    //      for v2: v2 != null
+    //      for length: length >= 0
+    //
+    // Abstract Function:
+    //      An instance e represents a line joining a pair of nodes where
+    //      e.v1 represents one node of the edge
+    //      e.v2 represents the other node of the edge
+    //      e.length represents the weight of an edge (ie, cost, distance, capacity, etc)
+
 
     public Edge(V v1, V v2) {
         this(v1, v2, 1);

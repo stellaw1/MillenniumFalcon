@@ -5,8 +5,20 @@ package cpen221.mp2.graph;
  * No two vertices in the same graph should have the same id.
  */
 public class Vertex {
+
+    /** a unique ID to identify the Vertex */
     private final int id;
+
+    /** a mutable name for the Vertex*/
     private String name;
+
+    // Representation Invariant:
+    //
+    // Abstract Function:
+    //      An instance v represents a node in a graph where
+    //      v.id is a numeric ID that uniquely identifies the node
+    //      v.name is the name of the node
+
 
     /**
      * Create a new vertex
@@ -60,9 +72,10 @@ public class Vertex {
     //// --- any new methods, if necessary, go below this link --- ////
 
     /**
+     * Checks if two Vertices have the same ID
      *
-     * @param v
-     * @return
+     * @param v is a Vertex to check
+     * @return true if v has the same id as this Vertex and false otherwise.
      */
     public boolean checkID(Vertex v) {
         if (id == v.id()) {
